@@ -11,7 +11,7 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
+        sjl = isNodeEnv ? require('sjljs') : window.sjl,
         Optionable = sjl.ns.stdlib.Optionable,
 
     Filter = Optionable.extend({
@@ -23,10 +23,12 @@
         }
     });
 
-    sjl.ns('filter.Filter', Filter);
-
-    if (window.__isAmd) {
+    if (!isNodeEnv) {
+        sjl.ns('filter.Filter', Filter);
         return Filter;
+    }
+    else {
+        module.exports = Filter;
     }
 
 }());

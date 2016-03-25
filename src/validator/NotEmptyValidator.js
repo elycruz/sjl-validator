@@ -7,8 +7,8 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
-        Validator = sjl.ns.refactor.validator.Validator,
+        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
+        Validator = sjl.ns.validator.Validator,
         NotEmptyValidator = function NotEmptyValidator() {
             // Set defaults and extend with Base validator
             Validator.apply(this, [{

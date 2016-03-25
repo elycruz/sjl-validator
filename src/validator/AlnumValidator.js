@@ -7,8 +7,8 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
-        Validator = sjl.ns.refactor.validator.Validator,
+        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
+        Validator = sjl.ns.validator.Validator,
         AlnumValidator = function AlnumValidator (/**...options {Object}**/) {
 
             // Set defaults and extend with Base validator
@@ -54,7 +54,7 @@
         module.exports = AlnumValidator;
     }
     else {
-        sjl.ns('refactor.validator.AlnumValidator', AlnumValidator);
+        sjl.ns('validator.AlnumValidator', AlnumValidator);
         if (window.__isAmd) {
             return AlnumValidator;
         }

@@ -23,10 +23,10 @@
     //}
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
-        Validator = sjl.ns.refactor.validator.Validator,
-        contextName = 'sjl.ns.refactor.validator.NumberValidator',
-        //InRangeValidator = sjl.ns.refactor.validator.InRangeValidator,
+        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
+        Validator = sjl.ns.validator.Validator,
+        contextName = 'sjl.ns.validator.NumberValidator',
+        //InRangeValidator = sjl.ns.validator.InRangeValidator,
         NumberValidator = function NumberValidator(/** ...options {Object}**/) {
             // Apply Validator to self
             Validator.apply(this);
@@ -509,7 +509,7 @@
         module.exports = NumberValidator;
     }
     else {
-        sjl.ns('refactor.validator.NumberValidator', NumberValidator);
+        sjl.ns('validator.NumberValidator', NumberValidator);
         if (window.__isAmd) {
             return NumberValidator;
         }

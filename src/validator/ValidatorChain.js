@@ -7,10 +7,10 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
-        contextName = 'sjl.ns.refactor.validator.ValidatorChain',
+        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
+        contextName = 'sjl.ns.validator.ValidatorChain',
         ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        Validator = sjl.ns.refactor.validator.Validator,
+        Validator = sjl.ns.validator.Validator,
         ValidatorChain = function ValidatorChain(/*...options {Object}*/) {
             var _breakChainOnFailure = false,
                 _validators = [];
@@ -158,7 +158,7 @@
         module.exports = ValidatorChain;
     }
     else {
-        sjl.ns('refactor.validator.ValidatorChain', ValidatorChain);
+        sjl.ns('validator.ValidatorChain', ValidatorChain);
         if (window._isAmd) {
             return ValidatorChain;
         }

@@ -10,8 +10,8 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
-        ValidatorChain = sjl.ns.refactor.validator.ValidatorChain,
+        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
+        ValidatorChain = sjl.ns.validator.ValidatorChain,
         Input = function Input(options) {
             var _allowEmpty = false,
                 _continueIfEmpty = false,
