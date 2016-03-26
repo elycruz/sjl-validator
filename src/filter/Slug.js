@@ -25,15 +25,16 @@
             enumerable: true
         },
         filter: {
-            value: function (value) {
+            value: function (value, max) {
                 sjl.throwTypeErrorIfNotOfType('sjl.filter.Slug', 'value', value, String);
+                max = sjl.classOfIs(max, Number) ? max : 201;
                 return value.trim().toLowerCase()
                     .split(Slug.allowedCharsRegex)
                     .filter(function (char) {
                         return char.length > 0;
                     })
                     .join('-')
-                    .substring(0, 201);
+                    .substring(0, max);
             },
             enumerable: true
         }

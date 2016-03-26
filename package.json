@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/elycruz/sjl-validator-js#readme",
   "dependencies": {
-    "sjljs": "^0.5.39"
+    "sjljs": "^0.5.41"
   },
   "devDependencies": {
     "chai": "^3.5.0",

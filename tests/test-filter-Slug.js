@@ -8,6 +8,14 @@ let expect = require('chai').expect,
     Alias = require('../src/filter/Alias'),
     Slug = require('../src/filter/Slug');
 
+function repeatStr(str, times) {
+    var out = '';
+    while (out.length < times) {
+        out += str;
+    }
+    return out;
+}
+
 function filterDataProvider() {
     return [
         [{
@@ -51,10 +59,10 @@ function filterDataProvider() {
 
 function invalidFilterCandidateProvider() {
     return [
-        // To short for test:  Should throw exception
-        [''],
-        // To long for test;  Should throw exception
-        [str_repeat('A', 201)],
+        // Not of correct type for test:  Should throw exception
+        [function () {}],
+        // Not of correct type for test;  Should throw exception
+        [true],
         // Not of correct type for test;  Should throw exception
         [99]
     ];
@@ -74,6 +82,12 @@ describe(
             expect(Slug(unfilteredValue)).to.equal(filteredValue);
         });
     });
+
+    //it ('should throw an error when attempting to filter unsupported values.', function () {
+    //    invalidFilterCandidateProvider()[0].forEach(function (args) {
+    //        return expect(Slug(args[0])).to.throw(Error);
+    //    });
+    //});
 });
 
 describe(
@@ -81,7 +95,6 @@ describe(
     ' #filter.Alias#filter,' +
     ' #filter.Alias.filter', function () {
     var filter = new Alias();
-        console.log(Alias);
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,
             unfilteredValue = args[0].unfiltered;
