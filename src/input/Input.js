@@ -13,6 +13,7 @@
         sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
         ValidatorChain = sjl.ns.validator.ValidatorChain,
         FilterChain = sjl.ns.filter.FilterChain,
+        Extendable = sjl.ns.stdlib.Extendable,
         Input = function Input(options) {
             var _allowEmpty = false,
                 _continueIfEmpty = false,
@@ -160,7 +161,7 @@
             }
         };
 
-    Input = Optionable.extend(Input, {
+    Input = Extendable.extend(Input, {
 
         isValid: function (value) {
 

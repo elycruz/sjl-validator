@@ -58,7 +58,6 @@
         if (window.__isAmd) {
             return AlnumValidator;
         }
-
     }
 
 })();
