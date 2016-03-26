@@ -12,10 +12,10 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var Validator = sjl.ns.refactor.validator.Validator,
-    RegexValidator = sjl.ns.refactor.validator.RegexValidator;
+var Validator = sjl.ns.validator.Validator,
+    RegexValidator = sjl.ns.validator.RegexValidator;
 
-describe('sjl.ns.refactor.validator.RegexValidator`', function () {
+describe('sjl.ns.validator.RegexValidator`', function () {
 
     "use strict";
 
@@ -46,7 +46,7 @@ describe('sjl.ns.refactor.validator.RegexValidator`', function () {
             '/^[a-z]+$/': '0123a12bc', // Alphabetical
             '^(:?\\+|\\-)?\\d+$': '-10sd0e+99' // Signed Number
         },
-        validator = new sjl.ns.refactor.validator.RegexValidator();
+        validator = new sjl.ns.validator.RegexValidator();
 
     // Run tests
     regexTest(truthyMap, validator, true);

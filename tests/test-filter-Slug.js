@@ -5,16 +5,10 @@
 
 let expect = require('chai').expect,
     sjl = require('sjljs'),
-    Alias = require('../src/filter/Alias'),
-    Slug = require('../src/filter/Slug');
-
-function repeatStr(str, times) {
-    var out = '';
-    while (out.length < times) {
-        out += str;
-    }
-    return out;
-}
+    ns = require('../src/namespace'),
+    Alias = ns.filter.Alias,
+    Slug = ns.filter.Slug,
+    testUtils = ns.utils.testUtils;
 
 function filterDataProvider() {
     return [

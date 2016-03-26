@@ -25,7 +25,7 @@
             });
 
             // Set defaults and extend with Base validator
-            Validator.call(this, {
+            Validator.apply(this, [{
                 pattern: /./,
                 messageTemplates: {
                     DOES_NOT_MATCH_PATTERN: function () {
@@ -34,7 +34,7 @@
                             + this.value + '".';
                     }
                 }
-            });
+            }].concat(sjl.argsToArray(arguments)));
         };
 
     RegexValidator = Validator.extend(RegexValidator, {
@@ -46,7 +46,7 @@
             self.clearMessages();
 
             // Set and get or get value (gets the set value if value is undefined
-            value = typeof value === 'undefined' ? this.value : value;
+            this.value = value = typeof value === 'undefined' ? this.value : value;
 
             // Run the test
             retVal = self.pattern.test(value);

@@ -13,6 +13,7 @@ if (typeof expect === 'undefined') {
 }
 
 describe ('#input.Input', function () {
+
     "use strict";
 
     var Input = sjl.ns.input.Input;

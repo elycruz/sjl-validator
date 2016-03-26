@@ -12,8 +12,8 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var NotEmptyValidator = sjl.ns.refactor.validator.NotEmptyValidator,
-    Validator = sjl.ns.refactor.validator.Validator;
+var NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
+    Validator = sjl.ns.validator.Validator;
 
 describe('sjl.ns.validator.NotEmptyValidator', function () {
 

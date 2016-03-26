@@ -12,18 +12,18 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var Validator =         sjl.ns.refactor.validator.Validator,
-    ValidatorChain =    sjl.ns.refactor.validator.ValidatorChain,
-    RegexValidator =    sjl.ns.refactor.validator.RegexValidator,
-    NumberValidator =   sjl.ns.refactor.validator.NumberValidator,
-    NotEmptyValidator = sjl.ns.refactor.validator.NotEmptyValidator,
-    AlnumValidator =    sjl.ns.refactor.validator.AlnumValidator;
+var Validator =         sjl.ns.validator.Validator,
+    ValidatorChain =    sjl.ns.validator.ValidatorChain,
+    RegexValidator =    sjl.ns.validator.RegexValidator,
+    NumberValidator =   sjl.ns.validator.NumberValidator,
+    NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
+    AlnumValidator =    sjl.ns.validator.AlnumValidator;
 
-describe('sjl.ns.refactor.validator.ValidatorChain', function () {
+describe('sjl.ns.validator.ValidatorChain', function () {
 
     'use strict';
 
-    it ('should extend `sjl.ns.refactor.validator.Validator', function () {
+    it ('should extend `sjl.ns.validator.Validator', function () {
         expect((new ValidatorChain()) instanceof Validator).to.equal(true);
     });
 

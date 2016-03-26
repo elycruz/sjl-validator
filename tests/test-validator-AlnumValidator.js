@@ -12,8 +12,8 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var AlnumValidator = sjl.ns.refactor.validator.AlnumValidator,
-    Validator = sjl.ns.refactor.validator.Validator;
+var AlnumValidator = sjl.ns.validator.AlnumValidator,
+    Validator = sjl.ns.validator.Validator;
 
 describe('sjl.ns.validator.AlnumValidator', function () {
 

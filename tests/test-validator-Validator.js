@@ -12,7 +12,7 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var Validator = sjl.ns.refactor.validator.Validator;
+var Validator = sjl.ns.validator.Validator;
 
 describe('sjl.ns.validator.Validator', function () {
 
