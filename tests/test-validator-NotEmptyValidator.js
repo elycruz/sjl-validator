@@ -4,7 +4,7 @@
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai'),
-        sjl = require('./../../src/sjl/sjl.js');
+        sjl = require('sjljs');
 }
 
 // Get chai.expect

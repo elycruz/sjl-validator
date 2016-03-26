@@ -24,16 +24,13 @@
                     }
                 }
             });
-
-            // Call Filter's constructor on this with some default options
-            Filter.apply(this, arguments);
         };
 
-    FilterChain = Filter.extend(FilterChain, {
+    FilterChain = sjl.ns.stdlib.Extendable.extend(FilterChain, {
 
         filter: function (value) {
-            return this.filters.reduce(function (_value, filter) {
-                return filter.filter(value)
+            return [value].concat(this.filters).reduce(function (_value, filter) {
+                return filter.filter(_value)
             });
         },
 

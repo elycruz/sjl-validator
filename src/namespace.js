@@ -4,7 +4,7 @@
 (function () {
     if (typeof window === 'undefined') {
         var sjl = require('sjljs');
-        module.exports = Object.assign(sjl.ns, sjl.createTopLevelPackage({}, 'package', 'ns', __dirname).ns);
+        module.exports = sjl.extend(sjl.ns, sjl.createTopLevelPackage({}, 'package', 'ns', __dirname).ns);
     }
     else {
         return window.sjl.ns;
