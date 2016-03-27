@@ -1,0 +1,9 @@
+
+start loop
+    Find first occurrence of comment open tag
+        if no open tag found
+        exit loop
+        capture position of open tag
+
+        find next occurrence of comment close tag starting from open tag
+        find next occurrence of comment open tag
