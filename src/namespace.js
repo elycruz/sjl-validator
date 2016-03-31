@@ -4,9 +4,10 @@
 (function () {
     if (typeof window === 'undefined') {
         var sjl = require('sjljs');
-        module.exports = sjl.extend(sjl.ns, sjl.createTopLevelPackage({}, 'package', 'ns', __dirname).ns);
+        module.exports = sjl.extend(sjl.ns,
+            sjl.createTopLevelPackage({}, 'package', 'ns', __dirname).ns);
     }
-    else {
+    else if (window.__isAmd) {
         return window.sjl.ns;
     }
 }());
