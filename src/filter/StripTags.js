@@ -60,18 +60,18 @@
             }
         });
 
-    function validateTag (tag) {
+    function validateTagName (tag) {
         return /^[a-z][a-z\d\-]{0,21}$/i.test(tag);
     }
 
     function validateTags (tags) {
         return !tags.some(function (tag) {
-                return !validateTag(tag);
+                return !validateTagName(tag);
             });
     }
 
     function validateAttrib (attrib) {
-        return validateTag(attrib);
+        return validateTagName(attrib);
     }
 
     function validateAttribs (attribs) {
@@ -123,7 +123,7 @@
         attribs.forEach(function (attrib) {
             var regex = new RegExp(
                     '(<(' + StripTags.NAME_REGEX_PARTIAL + ')' + spacePartial + ')' +
-                        '(?:' + attrib + ')*' + '(' +
+                        '(?:' + attrib + '*=\\"[^\\"]*\\"[\\n\\r\\t\\s]*)*' + '(' +
                         spacePartial +
                     '>' +
                         '.*' +

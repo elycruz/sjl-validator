@@ -16,7 +16,7 @@ describe('#filter.StripTags', function () {
         console.log(
             StripTags.filter(
                 '<html lang="eng">Hello World</html>' +
-                '<head>Hello</head>', ['head', 'html'], ['lang']));
+                '<head>Hello</head>', ['html', 'head'], ['lang']));
     });
 
 });
