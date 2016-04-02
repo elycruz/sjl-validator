@@ -64,7 +64,7 @@
         return /^[a-z][a-z\d\-]{0,21}$/i.test(tag);
     }
 
-    function validateTags (tags) {
+    function validateTagNames (tags) {
         return !tags.some(function (tag) {
                 return !validateTagName(tag);
             });
@@ -81,38 +81,36 @@
     }
 
     function stripComments (value) {
-        return /<\!\-\-[\t\n\r]*.+[\t\n\r]*\-\->/gm.replace(value);
+        return value.replace(/<\!\-\-[\t\n\r]*.+[\t\n\r]*\-\->/gm, '');
     }
 
     function createTagRegexPartial (tag) {
         var spacePartial = StripTags.SPACE_REGEX_PARTIAL;
-        return '(<(' + tag + ')' + spacePartial +
-            '(?:' + StripTags.ATTRIB_REGEX_PARTIAL + ')*' +
-            spacePartial +
-        '>' +
+        return '(<(' + tag + ')' +
+        '(?:' + StripTags.ATTRIB_REGEX_PARTIAL + ')*' + spacePartial + '>' +
             '.*' +
-        '<\/' + spacePartial + '\\2' + spacePartial + '>)*';
+        '<\/' + spacePartial + '\\2' + spacePartial + '>)';
     }
 
     function stripTags (value, tags) {
         if (sjl.isEmptyOrNotOfType(tags, Array)) {
             return value;
         }
-        else if (!validateTags(tags)) {
+        else if (!validateTagNames(tags)) {
             throw new Error (contextName + ' `_stripTags` ' +
                 'Only valid html tag names allowed in `tags` list.  ' +
                 'Tags recieved: "' + tags + '".');
         }
         var out = value;
         tags.forEach(function (tag) {
-            var regex = new RegExp(createTagRegexPartial(tag));
+            var regex = new RegExp(createTagRegexPartial(tag), 'gim');
             out = out.replace(regex, '');
         });
         return out;
     }
 
     function stripAttribs (value, attribs) {
-        if (sjl.isset(attribs)) {
+        if (!sjl.isset(attribs)) {
             return value;
         }
         else if (!validateAttribs(attribs)) {
@@ -122,15 +120,10 @@
             spacePartial = StripTags.SPACE_REGEX_PARTIAL;
         attribs.forEach(function (attrib) {
             var regex = new RegExp(
-                    '(<(' + StripTags.NAME_REGEX_PARTIAL + ')' + spacePartial + ')' +
-                        '(?:' + attrib + '*=\\"[^\\"]*\\"[\\n\\r\\t\\s]*)*' + '(' +
-                        spacePartial +
-                    '>' +
-                        '.*' +
-                    '<\/\\2' + spacePartial + '>)*',
+                        '([\\n\\r\\t\\s]*' + attrib + '=\\"[^\\"]*\\")',
                     'gim'
                 );
-            out = out.replace(regex, '$2$3');
+            out = out.replace(regex, '');
         });
         return out;
     }
@@ -138,10 +131,10 @@
     Object.defineProperties(StripTags, {
         SPACE_REGEX_PARTIAL:  {value:'[\\n\\r\\t\\s]*', enumerable: true},
         NAME_REGEX_PARTIAL:   {value:'[a-z][a-z\\-\\d]*', enumerable: true},
-        ATTRIB_REGEX_PARTIAL: {value:'[a-z][a-z\\-\\d]*=\\"[^\\"]*\\"[\\n\\r\\t\\s]*', enumerable: true},
+        ATTRIB_REGEX_PARTIAL: {value:'[\\n\\r\\t\\s]*[a-z][a-z\\-\\d]*=\\"[^\\"]*\\"', enumerable: true},
         filter: {
             value: function (value, tags, attribs, removeComments) {
-                var out = stripTags(removeComments ? stripComments(value) : value, tags);
+                var out = stripTags(removeComments ? stripComments(value) : value, tags, attribs);
                 return sjl.isEmptyOrNotOfType(attribs, Array) ? out :
                     stripAttribs(out, attribs);
             },
