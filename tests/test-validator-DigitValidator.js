@@ -14,11 +14,11 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var Digits = ns.validator.Digits,
+var DigitValidator = ns.validator.DigitValidator,
     Validator = ns.validator.Validator;
 
-describe('sjl.ns.validator.Digits', function () {
-    var generalValidator = new Digits();
+describe('sjl.ns.validator.DigitValidator', function () {
+    var generalValidator = new DigitValidator();
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
@@ -31,7 +31,7 @@ describe('sjl.ns.validator.Digits', function () {
     });
 
     it ('should return `true` if value contains only digits.', function () {
-        var validator = new Digits(),
+        var validator = new DigitValidator(),
             values = [
                 [true, '999'],
                 [true, '123'],

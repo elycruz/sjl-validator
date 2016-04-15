@@ -14,11 +14,11 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var StringLength = ns.validator.StringLength,
+var StringLengthValidator = ns.validator.StringLengthValidator,
     Validator = ns.validator.Validator;
 
-describe('sjl.ns.validator.StringLength', function () {
-    var generalValidator = new StringLength();
+describe('sjl.ns.validator.StringLengthValidator', function () {
+    var generalValidator = new StringLengthValidator();
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
@@ -38,7 +38,7 @@ describe('sjl.ns.validator.StringLength', function () {
     });
 
     it ('should return `true` value.length is within default range.', function () {
-        var validator = new StringLength(),
+        var validator = new StringLengthValidator(),
             values = [
                 [true, 'helloworld'],
                 [true, 'testingtesting123testingtesting123'],
@@ -57,7 +57,7 @@ describe('sjl.ns.validator.StringLength', function () {
     });
 
     describe ('#isValid with set min and max values', function () {
-        var validator = new StringLength({min: 0, max: 55}),
+        var validator = new StringLengthValidator({min: 0, max: 55}),
             values = [
                 [true, 'within', 'helloworld'],
                 [true, 'within', 'testingtesting123testingtesting123'],

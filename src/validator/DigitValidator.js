@@ -9,8 +9,8 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
         RegexValidator = sjl.ns.validator.RegexValidator,
-        contextName = 'sjl.ns.validator.Digits',
-        Digits = function Digits (/**...options {Object}**/) {
+        contextName = 'sjl.ns.validator.DigitValidator',
+        DigitValidator = function DigitValidator (/**...options {Object}**/) {
             RegexValidator.apply(this, [{
                 pattern: /^\d+$/,
                 messageTemplates: {
@@ -22,15 +22,15 @@
             }].concat(sjl.argsToArray(arguments)));
         };
 
-    Digits = RegexValidator.extend(Digits);
+    DigitValidator = RegexValidator.extend(DigitValidator);
 
     if (isNodeEnv) {
-        module.exports = Digits;
+        module.exports = DigitValidator;
     }
     else {
-        sjl.ns('validator.Digits', Digits);
+        sjl.ns('validator.DigitValidator', DigitValidator);
         if (window.__isAmd) {
-            return Digits;
+            return DigitValidator;
         }
     }
 

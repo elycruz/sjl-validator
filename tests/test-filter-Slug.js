@@ -6,7 +6,6 @@
 let expect = require('chai').expect,
     sjl = require('sjljs'),
     ns = require('../src/namespace'),
-    Alias = ns.filter.Alias,
     Slug = ns.filter.Slug,
     testUtils = ns.utils.testUtils;
 
@@ -82,20 +81,4 @@ describe(
     //        return expect(Slug(args[0])).to.throw(Error);
     //    });
     //});
-});
-
-describe(
-    '#filter.Alias,' +
-    ' #filter.Alias#filter,' +
-    ' #filter.Alias.filter', function () {
-    var filter = new Alias();
-    filterDataProvider().forEach(function (args) {
-        var filteredValue = args[0].filtered,
-            unfilteredValue = args[0].unfiltered;
-        it(`should return slug ${filteredValue} when \`value\` is ${unfilteredValue}.`, function () {
-            expect(filter.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(Alias.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(Alias(unfilteredValue)).to.equal(filteredValue);
-        });
-    });
 });
