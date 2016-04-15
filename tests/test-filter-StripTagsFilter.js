@@ -5,16 +5,16 @@
 
 let expect = require('chai').expect,
     ns = require('../src/namespace'),
-    StripTags = ns.filter.StripTags;
+    StripTagsFilter = ns.filter.StripTagsFilter;
 
-describe('#filter.StripTags', function () {
-    it ('should be an instance of StripTags constructor.', function () {
-        expect(new StripTags()).to.be.instanceOf(StripTags);
+describe('#filter.StripTagsFilter', function () {
+    it ('should be an instance of StripTagsFilter constructor.', function () {
+        expect(new StripTagsFilter()).to.be.instanceOf(StripTagsFilter);
     });
 
-    describe('#filter.StripTags.filter', function () {
+    describe('#filter.StripTagsFilter.filter', function () {
         console.log(
-            StripTags.filter(
+            StripTagsFilter.filter(
                 '<html lang="eng" lang="chinese" mambo="no.3">' +
                 '<head mambo="no.9" mambo="hello" mambo="what is your name?">Hello</head>Hello World' +
                 '<head>Hello</head><!-- This is a comment.  Hello World x2. -->Hello World' +

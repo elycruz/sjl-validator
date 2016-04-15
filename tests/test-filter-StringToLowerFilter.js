@@ -5,7 +5,7 @@
 
 let expect = require('chai').expect,
     ns = require('../src/namespace'),
-    StringToLower = ns.filter.StringToLower;
+    StringToLowerFilter = ns.filter.StringToLowerFilter;
 
 function filterDataProvider() {
     return [
@@ -45,17 +45,17 @@ function filterDataProvider() {
 }
 
 describe(
-    '#filter.StringToLower,' +
-    ' #filter.StringToLower#filter,' +
-    ' #filter.StringToLower.filter', function () {
-    var filter = new StringToLower();
+    '#filter.StringToLowerFilter,' +
+    ' #filter.StringToLowerFilter#filter,' +
+    ' #filter.StringToLowerFilter.filter', function () {
+    var filter = new StringToLowerFilter();
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,
             unfilteredValue = args[0].unfiltered;
         it(`should return slug ${filteredValue} when \`value\` is ${unfilteredValue}.`, function () {
             expect(filter.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(StringToLower.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(StringToLower(unfilteredValue)).to.equal(filteredValue);
+            expect(StringToLowerFilter.filter(unfilteredValue)).to.equal(filteredValue);
+            expect(StringToLowerFilter(unfilteredValue)).to.equal(filteredValue);
         });
     });
 

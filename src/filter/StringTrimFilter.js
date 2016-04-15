@@ -8,21 +8,21 @@
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('sjljs') : window.sjl,
         ns = require('../namespace'),
-        StringTrim = ns.filter.Filter.extend({
-            constructor: function StringTrim(value) {
+        StringTrimFilter = ns.filter.Filter.extend({
+            constructor: function StringTrimFilter(value) {
                 if (!sjl.isset(this)) {
-                    return StringTrim.filter(value);
+                    return StringTrimFilter.filter(value);
                 }
             },
             filter: function (value) {
-                return StringTrim.filter(value);
+                return StringTrimFilter.filter(value);
             }
         });
 
-    Object.defineProperties(StringTrim, {
+    Object.defineProperties(StringTrimFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringTrim', 'value', value, String);
+                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringTrimFilter', 'value', value, String);
                 return value.trim();
             },
             enumerable: true
@@ -30,11 +30,11 @@
     });
 
     if (!isNodeJs) {
-        sjl.ns('filter.StringTrim', StringTrim);
-        return StringTrim;
+        sjl.ns('filter.StringTrimFilter', StringTrimFilter);
+        return StringTrimFilter;
     }
     else {
-        module.exports = StringTrim;
+        module.exports = StringTrimFilter;
     }
 
 }());

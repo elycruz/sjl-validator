@@ -6,7 +6,7 @@
 let expect = require('chai').expect,
     sjl = require('sjljs'),
     ns = require('../src/namespace'),
-    Slug = ns.filter.Slug,
+    SlugFilter = ns.filter.SlugFilter,
     testUtils = ns.utils.testUtils;
 
 function filterDataProvider() {
@@ -62,23 +62,23 @@ function invalidFilterCandidateProvider() {
 }
 
 describe(
-    '#filter.Slug,' +
-    ' #filter.Slug#filter,' +
-    ' #filter.Slug.filter', function () {
-    var filter = new Slug();
+    '#filter.SlugFilter,' +
+    ' #filter.SlugFilter#filter,' +
+    ' #filter.SlugFilter.filter', function () {
+    var filter = new SlugFilter();
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,
             unfilteredValue = args[0].unfiltered;
         it(`should return slug ${filteredValue} when \`value\` is ${unfilteredValue}.`, function () {
             expect(filter.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(Slug.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(Slug(unfilteredValue)).to.equal(filteredValue);
+            expect(SlugFilter.filter(unfilteredValue)).to.equal(filteredValue);
+            expect(SlugFilter(unfilteredValue)).to.equal(filteredValue);
         });
     });
 
     //it ('should throw an error when attempting to filter unsupported values.', function () {
     //    invalidFilterCandidateProvider()[0].forEach(function (args) {
-    //        return expect(Slug(args[0])).to.throw(Error);
+    //        return expect(SlugFilter(args[0])).to.throw(Error);
     //    });
     //});
 });

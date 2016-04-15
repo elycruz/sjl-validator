@@ -8,21 +8,21 @@
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('sjljs') : window.sjl,
         ns = require('../namespace'),
-        StringToLower = ns.filter.Filter.extend({
-            constructor: function StringToLower(value) {
+        StringToLowerFilter = ns.filter.Filter.extend({
+            constructor: function StringToLowerFilter(value) {
                 if (!sjl.isset(this)) {
-                    return StringToLower.filter(value);
+                    return StringToLowerFilter.filter(value);
                 }
             },
             filter: function (value) {
-                return StringToLower.filter(value);
+                return StringToLowerFilter.filter(value);
             }
         });
 
-    Object.defineProperties(StringToLower, {
+    Object.defineProperties(StringToLowerFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringToLower', 'value', value, String);
+                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringToLowerFilter', 'value', value, String);
                 return value.toLowerCase();
             },
             enumerable: true
@@ -30,11 +30,11 @@
     });
 
     if (!isNodeJs) {
-        sjl.ns('filter.StringToLower', StringToLower);
-        return StringToLower;
+        sjl.ns('filter.StringToLowerFilter', StringToLowerFilter);
+        return StringToLowerFilter;
     }
     else {
-        module.exports = StringToLower;
+        module.exports = StringToLowerFilter;
     }
 
 }());

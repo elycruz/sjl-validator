@@ -5,7 +5,7 @@
 
 let expect = require('chai').expect,
     ns = require('../src/namespace'),
-    StringTrim = ns.filter.StringTrim;
+    StringTrimFilter = ns.filter.StringTrimFilter;
 
 function filterDataProvider() {
     return [
@@ -26,17 +26,17 @@ function filterDataProvider() {
 }
 
 describe(
-    '#filter.StringTrim,' +
-    ' #filter.StringTrim#filter,' +
-    ' #filter.StringTrim.filter', function () {
-    var filter = new StringTrim();
+    '#filter.StringTrimFilter,' +
+    ' #filter.StringTrimFilter#filter,' +
+    ' #filter.StringTrimFilter.filter', function () {
+    var filter = new StringTrimFilter();
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,
             unfilteredValue = args[0].unfiltered;
         it(`should return slug ${filteredValue} when \`value\` is ${unfilteredValue}.`, function () {
             expect(filter.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(StringTrim.filter(unfilteredValue)).to.equal(filteredValue);
-            expect(StringTrim(unfilteredValue)).to.equal(filteredValue);
+            expect(StringTrimFilter.filter(unfilteredValue)).to.equal(filteredValue);
+            expect(StringTrimFilter(unfilteredValue)).to.equal(filteredValue);
         });
     });
 

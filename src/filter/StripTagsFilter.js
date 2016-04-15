@@ -8,11 +8,11 @@
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('sjljs') : window.sjl,
         ns = require('../namespace'),
-        contextName = 'sjl.ns.filter.StripTags',
-        StripTags = ns.filter.Filter.extend({
-            constructor: function StripTags(value, options) {
+        contextName = 'sjl.ns.filter.StripTagsFilter',
+        StripTagsFilter = ns.filter.Filter.extend({
+            constructor: function StripTagsFilter(value, options) {
                 if (!sjl.isset(this)) {
-                    return StripTags.filter.apply(null, arguments);
+                    return StripTagsFilter.filter.apply(null, arguments);
                 }
                 var _tags,
                     _stripComments = false,
@@ -51,7 +51,7 @@
                 }
             },
             filter: function (value) {
-                return StripTags.filter(
+                return StripTagsFilter.filter(
                     value,
                     this.tags,
                     this.attribs,
@@ -85,9 +85,9 @@
     }
 
     function createTagRegexPartial (tag) {
-        var spacePartial = StripTags.SPACE_REGEX_PARTIAL;
+        var spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
         return '(<(' + tag + ')' +
-        '(?:' + StripTags.ATTRIB_REGEX_PARTIAL + ')*' + spacePartial + '>' +
+        '(?:' + StripTagsFilter.ATTRIB_REGEX_PARTIAL + ')*' + spacePartial + '>' +
             '.*' +
         '<\/' + spacePartial + '\\2' + spacePartial + '>)';
     }
@@ -117,7 +117,7 @@
             throw new Error ('Attribs mismatch');
         }
         var out = value,
-            spacePartial = StripTags.SPACE_REGEX_PARTIAL;
+            spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
         attribs.forEach(function (attrib) {
             var regex = new RegExp(
                         '([\\n\\r\\t\\s]*' + attrib + '=\\"[^\\"]*\\")',
@@ -128,7 +128,7 @@
         return out;
     }
 
-    Object.defineProperties(StripTags, {
+    Object.defineProperties(StripTagsFilter, {
         SPACE_REGEX_PARTIAL:  {value:'[\\n\\r\\t\\s]*', enumerable: true},
         NAME_REGEX_PARTIAL:   {value:'[a-z][a-z\\-\\d]*', enumerable: true},
         ATTRIB_REGEX_PARTIAL: {value:'[\\n\\r\\t\\s]*[a-z][a-z\\-\\d]*=\\"[^\\"]*\\"', enumerable: true},
@@ -143,11 +143,11 @@
     });
 
     if (!isNodeJs) {
-        sjl.ns('filter.StripTags', StripTags);
-        return StripTags;
+        sjl.ns('filter.StripTagsFilter', StripTagsFilter);
+        return StripTagsFilter;
     }
     else {
-        module.exports = StripTags;
+        module.exports = StripTagsFilter;
     }
 
 }());
