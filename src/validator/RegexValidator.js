@@ -7,9 +7,9 @@
 (function () {
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
-        contextName = 'sjl.ns.validator.RegexValidator',
-        Validator = sjl.ns.validator.Validator,
+        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        contextName = 'sjl.validator.RegexValidator',
+        Validator = sjl.validator.Validator,
         RegexValidator = function RegexValidator(/** ...options {Object} **/) {
             var _pattern = null;
             Object.defineProperties(this, {

@@ -1,24 +1,29 @@
 /**
  * Created by elyde on 1/15/2016.
  */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
+describe('sjl.validator.StringLengthValidator', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
     var chai = require('chai'),
-        sjl = require('sjljs'),
-        ns = require('../src/namespace'),
-        testUtils = ns.utils.testUtils;
-}
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
+    var StringLengthValidator = sjl.validator.StringLengthValidator,
+        Validator = sjl.validator.Validator,
+        generalValidator = new StringLengthValidator();
 
-var StringLengthValidator = ns.validator.StringLengthValidator,
-    Validator = ns.validator.Validator;
-
-describe('sjl.ns.validator.StringLengthValidator', function () {
-    var generalValidator = new StringLengthValidator();
+    function repeatStr(str, times) {
+        var out = '';
+        while (out.length < times) {
+            out += str;
+        }
+        return out;
+    }
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
@@ -56,7 +61,7 @@ describe('sjl.ns.validator.StringLengthValidator', function () {
         expect(validator.messages.length).to.equal(0);
     });
 
-    describe ('#isValid with set min and max values', function () {
+    describe ('isValid with set min and max values', function () {
         var validator = new StringLengthValidator({min: 0, max: 55}),
             values = [
                 [true, 'within', 'helloworld'],
@@ -64,8 +69,8 @@ describe('sjl.ns.validator.StringLengthValidator', function () {
                 [true, 'within', 'sallysellsseashellsdownbytheseashore'],
                 [true, 'within', 'hello[]world'],
                 [true, 'within', '99 bottles of beer on the wall'],
-                [false, 'without', testUtils.repeatStr('a', 56)],
-                [false, 'without', testUtils.repeatStr('b', 99)]
+                [false, 'without', repeatStr('a', 56)],
+                [false, 'without', repeatStr('b', 99)]
             ];
 
         // Validate values and expect value[0] to be return value of validation check

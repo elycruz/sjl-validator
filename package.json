@@ -2,7 +2,7 @@
   "name": "sjl-validator-js",
   "version": "1.0.0",
   "description": "A set of common validators needed for the frontend and backend (copied from Zend\\Validator).",
-  "main": "index.js",
+  "main": "./src/sjl.js",
   "directories": {
     "test": "tests"
   },
@@ -11,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elycruz/sjl-validator-js.git"
+    "url": "git+https://github.com/elycruz/sjl-validator.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/elycruz/sjl-validator-js/issues"
+    "url": "https://github.com/elycruz/sjl-validator/issues"
   },
-  "homepage": "https://github.com/elycruz/sjl-validator-js#readme",
+  "homepage": "https://github.com/elycruz/sjl-validator#readme",
   "dependencies": {
-    "sjljs": "^0.5.41"
+    "sjljs": "^6.1.24"
   },
   "devDependencies": {
     "chai": "^3.5.0",

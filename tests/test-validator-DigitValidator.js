@@ -1,24 +1,21 @@
 /**
  * Created by elyde on 1/15/2016.
  */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
+describe('sjl.validator.DigitValidator', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
     var chai = require('chai'),
-        sjl = require('sjljs'),
-        ns = require('../src/namespace'),
-        testUtils = ns.utils.testUtils;
-}
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-
-var DigitValidator = ns.validator.DigitValidator,
-    Validator = ns.validator.Validator;
-
-describe('sjl.ns.validator.DigitValidator', function () {
-    var generalValidator = new DigitValidator();
+    var DigitValidator = sjl.validator.DigitValidator,
+        Validator = sjl.validator.Validator,
+        generalValidator = new DigitValidator();
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);

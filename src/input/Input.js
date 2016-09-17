@@ -10,22 +10,23 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
-        ValidatorChain = sjl.ns.validator.ValidatorChain,
-        FilterChain = sjl.ns.filter.FilterChain,
-        Extendable = sjl.ns.stdlib.Extendable,
+        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        ValidatorChain = sjl.validator.ValidatorChain,
+        FilterChain = sjl.filter.FilterChain,
+        Extendable = sjl.stdlib.Extendable,
+        contextName = 'sjl.input.Input',
         Input = function Input(options) {
             var _allowEmpty = false,
-                _continueIfEmpty = false,
+                _continueIfEmpty = true,
                 _breakOnFailure = false,
-                _fallbackValue = false,
+                _fallbackValue,
                 _filterChain = null,
                 _alias = '',
                 _required = true,
                 _validatorChain = null,
-                _value = null,
-                _rawValue = null,
-                _messages = null,
+                _value,
+                _rawValue,
+                _filteredValue,
 
                 // Protect from adding programmatic validators, from within `isValid`, more than once
                 _validationHasRun = false;
@@ -81,6 +82,22 @@
                         _filterChain = value;
                     }
                 },
+                validators: {
+                    get: function () {
+                        return this.validatorChain.validators;
+                    },
+                    set: function (value) {
+                        this.validatorChain.addValidators(value);
+                    }
+                },
+                filters: {
+                    get: function () {
+                        return this.filterChain.filters;
+                    },
+                    set: function (value) {
+                        this.filterChain.addFilters(value);
+                    }
+                },
                 alias: {
                     get: function () {
                         return _alias;
@@ -116,7 +133,7 @@
                         return _value;
                     },
                     set: function (value) {
-                        if (typeof value === 'undefined') {
+                        if (sjl.isUndefined(value)) {
                             throw new TypeError('Input.value cannot be set to an undefined value.');
                         }
                         _value = value;
@@ -133,13 +150,23 @@
                         _rawValue = value;
                     }
                 },
-                messages: {
+                filteredValue: {
                     get: function () {
-                        return _messages;
+                        return _filteredValue;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'messages', value, Array);
-                        _messages = value;
+                        if (sjl.isUndefined(value)) {
+                            throw new TypeError(contextName + '.filteredValue doesn\'t allow `undefined` values.');
+                        }
+                        _filteredValue = value;
+                    }
+                },
+                messages: {
+                    get: function () {
+                        return this.validatorChain.messages;
+                    },
+                    set: function (value) {
+                        this.validatorChain.messages = value;
                     }
                 },
                 validationHasRun: {
@@ -159,6 +186,11 @@
             else if (sjl.classOfIs(options, Object)) {
                 sjl.extend(this, options);
             }
+
+            // Set raw value
+            if (this.value && sjl.isUndefined(this.rawValue)) {
+                this.rawValue = this.value;
+            }
         };
 
     Input = Extendable.extend(Input, {
@@ -169,24 +201,38 @@
 
                 // Get the validator chain, value and validate
                 validatorChain = self.validatorChain,
+                valueToTest = this.resolveValueToTest(value),
+                isValid,
                 retVal;
 
             // Clear messages
             self.clearMessages();
 
+            // Ensure raw value
+            self.rawValue = valueToTest;
+
             // Check whether we need to add an empty validator
-            if (!self.validationHasRun && !self.continueIfEmpty) {
-                validatorChain.addValidator(new sjl.EmptyValidator());
+            if (!self.validationHasRun && self.continueIfEmpty) {
+                validatorChain.addValidator(new sjl.validator.NotEmptyValidator());
             }
 
-            self.rawValue = value;
+            // Get whether is valid or not
+            isValid = validatorChain.isValid(valueToTest);
 
-            retVal = validatorChain.isValid(value);
-
-            // Fallback value
-            if (retVal === false && self.hasFallbackValue()) {
+            // Run filter if valid
+            if (isValid) {
+                retVal = true;
+                self.value =
+                    self.filteredValue =
+                        this.filter(valueToTest);
+            }
+            // Get fallback value if any
+            else if (!isValid && self.hasFallbackValue()) {
                 self.value = self.fallbackValue;
                 retVal = true;
+            }
+            else {
+                retVal = false;
             }
 
             // Protect from adding programmatic validators more than once..
@@ -197,8 +243,17 @@
             return retVal;
         },
 
+        validate: function (value) {
+            return this.isValid.apply(this, arguments);
+        },
+
         filter: function (value) {
-            return this.filterChain().filter(value);
+            return this.filterChain.filter(sjl.isUndefined(value) ? this.rawValue : value);
+        },
+
+        resolveValueToTest: function (value) {
+            return !sjl.isUndefined(value) ? value :
+                (!sjl.isUndefined(this.rawValue) ? this.rawValue : this.value);
         },
 
         hasFallbackValue: function () {
@@ -206,24 +261,48 @@
         },
 
         clearMessages: function () {
-            this.messages = [];
+            this.validatorChain.clearMessages();
             return this;
         },
 
         addValidators: function (validators) {
-            return this.validatorChain.addValidators(validators);
+            this.validatorChain.addValidators(validators);
+            return this;
         },
 
         addValidator: function (validator) {
-            return this.validatorChain.addValidator(validator);
+            this.validatorChain.addValidator(validator);
+            return this;
         },
 
         prependValidator: function (validator) {
-            return this.validatorChain.prependValidator(validator);
+            this.validatorChain.prependValidator(validator);
+            return this;
         },
 
         mergeValidatorChain: function (validatorChain) {
-            return this.validatorChain.mergeValidatorChain(validatorChain);
+            this.validatorChain.mergeValidatorChain(validatorChain);
+            return this;
+        },
+
+        addFilters: function (filters) {
+            this.filterChain.addFilters(filters);
+            return this;
+        },
+
+        addFilter: function (filter) {
+            this.filterChain.addFilter(filter);
+            return this;
+        },
+
+        prependFilter: function (filter) {
+            this.filterChain.prependFilter(filter);
+            return this;
+        },
+
+        mergeFilterChain: function (filterChain) {
+            this.filterChain.mergeFilterChain(filterChain);
+            return this;
         }
 
     });

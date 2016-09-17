@@ -6,9 +6,8 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('sjljs') : window.sjl,
-        ns = require('../namespace'),
-        SlugFilter = ns.filter.Filter.extend({
+        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        SlugFilter = sjl.filter.Filter.extend({
             constructor: function SlugFilter(value) {
                 if (!sjl.isset(this)) {
                     return SlugFilter.filter(value);
@@ -26,7 +25,9 @@
         },
         filter: {
             value: function (value, max) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.SlugFilter', 'value', value, String);
+                if (!sjl.isString(value)) {
+                    return value;
+                }
                 max = sjl.classOfIs(max, Number) ? max : 201;
                 return value.trim().toLowerCase()
                     .split(SlugFilter.allowedCharsRegex)

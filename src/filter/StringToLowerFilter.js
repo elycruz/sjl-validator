@@ -6,9 +6,8 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('sjljs') : window.sjl,
-        ns = require('../namespace'),
-        StringToLowerFilter = ns.filter.Filter.extend({
+        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        StringToLowerFilter = sjl.filter.Filter.extend({
             constructor: function StringToLowerFilter(value) {
                 if (!sjl.isset(this)) {
                     return StringToLowerFilter.filter(value);
@@ -22,8 +21,7 @@
     Object.defineProperties(StringToLowerFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringToLowerFilter', 'value', value, String);
-                return value.toLowerCase();
+                return sjl.isString(value) ? value.toLowerCase() : value;
             },
             enumerable: true
         }

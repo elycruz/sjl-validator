@@ -1,23 +1,21 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('sjljs');
-}
+describe('sjl.validator.RegexValidator`', function () {
 
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
 
-var Validator = sjl.ns.validator.Validator,
-    RegexValidator = sjl.ns.validator.RegexValidator;
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
-describe('sjl.ns.validator.RegexValidator`', function () {
-
-    "use strict";
+    var Validator = sjl.ns.validator.Validator,
+        RegexValidator = sjl.ns.validator.RegexValidator;
 
     it('should be a subclass of `Validator`.', function () {
         expect((new RegexValidator()) instanceof Validator).to.equal(true);

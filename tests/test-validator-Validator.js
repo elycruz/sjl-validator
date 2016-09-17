@@ -1,28 +1,27 @@
 /**
  * Created by elyde on 1/15/2016.
  */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
+describe('sjl.validator.Validator', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
     var chai = require('chai'),
-        sjl = require('sjljs');
-}
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
+    var Validator = sjl.ns.validator.Validator,
 
-var Validator = sjl.ns.validator.Validator;
-
-describe('sjl.ns.validator.Validator', function () {
-
-    var expectedPropertyAndTypes = {
-        messages: 'Array',
-        messagesMaxLength: 'Number',
-        messageTemplates: 'Object',
-        valueObscured: 'Boolean',
-        value: 'Null'
-    },
+        expectedPropertyAndTypes = {
+            messages: 'Array',
+            messagesMaxLength: 'Number',
+            messageTemplates: 'Object',
+            valueObscured: 'Boolean',
+            value: 'Null'
+        },
         expectedMethodNames = [
 
             // Value getter and setters
@@ -39,7 +38,7 @@ describe('sjl.ns.validator.Validator', function () {
             'isValid'
         ];
 
-    it ('should have the expected properties as expected types.', function () {
+    it('should have the expected properties as expected types.', function () {
         var validator = new Validator();
         Object.keys(expectedPropertyAndTypes).forEach(function (key) {
             expect(validator.hasOwnProperty(key)).to.equal(true);
@@ -47,7 +46,7 @@ describe('sjl.ns.validator.Validator', function () {
         });
     });
 
-    it ('should have the expected methods.', function () {
+    it('should have the expected methods.', function () {
         var validator = new Validator();
         expectedMethodNames.forEach(function (methodName) {
             expect(typeof validator[methodName]).to.equal('function');

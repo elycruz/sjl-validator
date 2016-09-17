@@ -9,7 +9,7 @@ to adhere to javascript and a more functional coding style).
     - For frontend 
 
 ### For in browser development:
-~~1.  Import the 'src/namespace.js' file and then the files for the 
+~~1.  Import the 'src/sjl.js' file and then the files for the
 filters and validators you require.~~  Not ready for browser use yet.
 
 ### For nodejs development:

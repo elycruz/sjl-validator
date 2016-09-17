@@ -13,9 +13,9 @@
     }
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
-        Validator = sjl.ns.validator.Validator,
-        contextName = 'sjl.ns.validator.StringLength',
+        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        Validator = sjl.validator.Validator,
+        contextName = 'sjl.validator.StringLength',
         StringLengthValidator = function StringLengthValidator (/**...options {Object}**/) {
             var _min = 0,
                 _max = Number.POSITIVE_INFINITY; // inifinite

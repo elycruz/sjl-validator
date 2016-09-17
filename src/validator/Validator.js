@@ -8,8 +8,8 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
-        contextName = 'sjl.ns.validator.Validator',
+        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        contextName = 'sjl.validator.Validator',
         Validator = function Validator(/** ...options {Object} **/) {
             var _messages = [],
                 _messagesMaxLength = 100,
@@ -74,12 +74,13 @@
             sjl.extend.apply(sjl, [true, this].concat(sjl.argsToArray(arguments)));
         };
 
-    Validator = sjl.ns.stdlib.Extendable.extend(Validator, {
+    Validator = sjl.stdlib.Extendable.extend(Validator, {
 
         /**
          * @todo change this method name to `addErrorByKeyOrCallback` or just add `addErrorByCallback` method
          * @param key {String|Function} - Key for add error by or callback to generate error string from.
          * @param value {*|undefined} - Value to pass into the error callback.
+         * @method sjl.validator.Validator#addErrorByKey
          * @returns {Validator}
          */
         addErrorByKey: function (key, value) {
@@ -98,7 +99,7 @@
                     messages.push(messageTemplate[key]);
                 }
             }
-            else if (sjl.classOfIs(key, 'function')) {
+            else if (sjl.classOfIs(key, 'Function')) {
                 messages.push(key.call(self, value, self));
             }
             else {

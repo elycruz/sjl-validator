@@ -7,10 +7,10 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
-        contextName = 'sjl.ns.validator.ValidatorChain',
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        Validator = sjl.ns.validator.Validator,
+        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        contextName = 'sjl.validator.ValidatorChain',
+        ObjectIterator = sjl.stdlib.ObjectIterator,
+        Validator = sjl.validator.Validator,
         ValidatorChain = function ValidatorChain(/*...options {Object}*/) {
             var _breakChainOnFailure = false,
                 _validators = [];
@@ -21,7 +21,8 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'validators', value, Array);
-                        _validators = value;
+                        _validators = [];
+                        this.addValidators(value.slice());
                     }
                 },
                 breakChainOnFailure: {
@@ -42,6 +43,7 @@
         };
 
     ValidatorChain = Validator.extend(ValidatorChain, {
+
         isValid: function (value) {
             var self = this,
                 retVal,
@@ -139,6 +141,16 @@
             return this.addValidators(validatorChain.validators);
         },
 
+        clearMessages: function () {
+            while (this.messages.length > 0) {
+                this.messages.pop();
+            }
+            this.validators.forEach(function (validator) {
+                validator.clearMessages();
+            });
+            return this;
+        },
+
         appendMessages: function (messages) {
             var self = this;
             if (sjl.isEmptyOrNotOfType(messages, Array)) {
@@ -152,6 +164,7 @@
             throw new TypeError('`' + contextName + '.' + funcName + '` only accepts subclasses/types of ' +
                 '`' + expectedType.name + '`.  Type received: "' + sjl.classOf(value) + '".');
         }
+
     });
 
     if (isNodeEnv) {

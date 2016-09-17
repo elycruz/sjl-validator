@@ -7,11 +7,11 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('sjljs') : window.sjl || {},
-        contextName = 'sjl.ns.filter.FilterChain',
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        Filter = sjl.ns.filter.Filter,
-        FilterChain = function FilterChain(/*...options {Object}*/) {
+        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        contextName = 'sjl.filter.FilterChain',
+        ObjectIterator = sjl.stdlib.ObjectIterator,
+        Filter = sjl.filter.Filter,
+        FilterChain = function FilterChain(filters) {
             var _filters = [];
             Object.defineProperties(this, {
                 filters: {
@@ -20,17 +20,21 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'filters', value, Array);
-                        _filters = value;
+                        _filters = [];
+                        this.addFilters(value.slice());
                     }
                 }
             });
+            if (filters) {
+                this.filters = filters.slice();
+            }
         };
 
-    FilterChain = sjl.ns.stdlib.Extendable.extend(FilterChain, {
+    FilterChain = sjl.stdlib.Extendable.extend(FilterChain, {
 
         filter: function (value) {
             return [value].concat(this.filters).reduce(function (_value, filter) {
-                return filter.filter(_value)
+                return filter.filter(_value);
             });
         },
 

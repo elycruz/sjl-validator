@@ -6,10 +6,9 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('sjljs') : window.sjl,
-        ns = require('../namespace'),
-        contextName = 'sjl.ns.filter.StripTagsFilter',
-        StripTagsFilter = ns.filter.Filter.extend({
+        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        contextName = 'sjl.filter.StripTagsFilter',
+        StripTagsFilter = sjl.filter.Filter.extend({
             constructor: function StripTagsFilter(value, options) {
                 if (!sjl.isset(this)) {
                     return StripTagsFilter.filter.apply(null, arguments);
@@ -96,10 +95,13 @@
         if (sjl.isEmptyOrNotOfType(tags, Array)) {
             return value;
         }
+        else if (!sjl.isString(value)) {
+            return value;
+        }
         else if (!validateTagNames(tags)) {
             throw new Error (contextName + ' `_stripTags` ' +
                 'Only valid html tag names allowed in `tags` list.  ' +
-                'Tags recieved: "' + tags + '".');
+                'Tags received: "' + tags + '".');
         }
         var out = value;
         tags.forEach(function (tag) {
@@ -116,8 +118,7 @@
         else if (!validateAttribs(attribs)) {
             throw new Error ('Attribs mismatch');
         }
-        var out = value,
-            spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
+        var out = value;
         attribs.forEach(function (attrib) {
             var regex = new RegExp(
                         '([\\n\\r\\t\\s]*' + attrib + '=\\"[^\\"]*\\")',

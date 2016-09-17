@@ -6,9 +6,8 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('sjljs') : window.sjl,
-        ns = require('../namespace'),
-        StringTrimFilter = ns.filter.Filter.extend({
+        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        StringTrimFilter = sjl.filter.Filter.extend({
             constructor: function StringTrimFilter(value) {
                 if (!sjl.isset(this)) {
                     return StringTrimFilter.filter(value);
@@ -22,8 +21,7 @@
     Object.defineProperties(StringTrimFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringTrimFilter', 'value', value, String);
-                return value.trim();
+                return sjl.isString(value) ? value.trim() : value;
             },
             enumerable: true
         }
