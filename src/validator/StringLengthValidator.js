@@ -13,7 +13,7 @@
     }
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        sjl = isNodeEnv ? require('./../sjl') : window.sjl || {},
         Validator = sjl.validator.Validator,
         contextName = 'sjl.validator.StringLength',
         StringLengthValidator = function StringLengthValidator (/**...options {Object}**/) {

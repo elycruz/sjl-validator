@@ -6,7 +6,7 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        sjl = isNodeJs ? require('./../sjl') : window.sjl,
         SlugFilter = sjl.filter.Filter.extend({
             constructor: function SlugFilter(value) {
                 if (!sjl.isset(this)) {

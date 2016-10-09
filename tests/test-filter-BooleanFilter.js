@@ -8,7 +8,7 @@ describe('sjl.filter.SlugFilter,', function () {
     // generating browser version of test(s).
     'use strict';
     var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
+        sjl = require('./../src/sjl'),
         expect = chai.expect;
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
@@ -27,40 +27,40 @@ describe('sjl.filter.SlugFilter,', function () {
 
         // Expect has required properties
         ['allowCasting', 'conversionRules', 'translations'].forEach(function (key) {
-            expect(sjl.isset(filter[key])).to.be.true();
+            expect(sjl.isset(filter[key])).to.equal(true);
         });
 
         // Expect has required static properties
         ['filter', 'castingRules'].forEach(function (key) {
-            expect(sjl.isset(BooleanFilter[key])).to.be.true();
+            expect(sjl.isset(BooleanFilter[key])).to.equal(true);
         });
     });
 
     it('should return a Boolean as is when it is filtering a Boolean.', function () {
         var filter = new BooleanFilter();
-        expect(filter.filter(true)).to.be.true();
-        expect(filter.filter(false)).to.be.false();
+        expect(filter.filter(true)).to.equal(true);
+        expect(filter.filter(false)).to.equal(false);
     });
 
     it('should return a `false` for all empty values.', function () {
         var filter = new BooleanFilter();
         [function () {
         }, null, undefined, [], {}, ''].forEach(function (value) {
-            expect(filter.filter(value)).to.be.false();
+            expect(filter.filter(value)).to.equal(false);
         });
     });
 
     it('should return a `true` for all non-empty values.', function () {
         var filter = new BooleanFilter();
         [[1, 2, 3], 'hello', true, {hello: 'world'}].forEach(function (value) {
-            expect(filter.filter(value)).to.be.true();
+            expect(filter.filter(value)).to.equal(true);
         });
     });
 
     it('should return `false` for all empty values representations as strings ["null", "false", etc.].', function () {
         var filter = new BooleanFilter();
         ['0', 'null', 'undefined', '[]', '{}', 'false'].forEach(function (value) {
-            expect(filter.filter(value)).to.be.false();
+            expect(filter.filter(value)).to.equal(false);
         });
     });
 
@@ -70,10 +70,10 @@ describe('sjl.filter.SlugFilter,', function () {
             translations: {'hai': true, 'si': true}
         });
         ['yes', 'si', 'hai'].forEach(function (value) {
-            expect(filter.filter(value)).to.be.true();
+            expect(filter.filter(value)).to.equal(true);
         });
         ['no', 'niet', 'hello', 'how are you'].forEach(function (value) {
-            expect(filter.filter(value)).to.be.false();
+            expect(filter.filter(value)).to.equal(false);
         });
     });
 
@@ -83,10 +83,10 @@ describe('sjl.filter.SlugFilter,', function () {
             translations: {'iie': false, 'niet': false, 'yes': true, 'si': true, 'hai': true, 'da': true}
         });
         ['no', 'niet', 'iie'].forEach(function (value) {
-            expect(filter.filter(value)).to.be.false();
+            expect(filter.filter(value)).to.equal(false);
         });
         ['yes', 'si', 'hai', 'da'].forEach(function (value) {
-            expect(filter.filter(value)).to.be.true();
+            expect(filter.filter(value)).to.equal(true);
         });
     });
 
@@ -115,7 +115,7 @@ describe('sjl.filter.SlugFilter,', function () {
             filter.conversionRules = ruleSet;
             filter.translations = translationSets[index][0];
             valueSets[index].forEach(function (value) {
-                expect(filter.filter(value)).to.be.true();
+                expect(filter.filter(value)).to.equal(true);
             });
         });
 

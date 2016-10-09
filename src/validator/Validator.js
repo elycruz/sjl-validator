@@ -8,7 +8,7 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        sjl = isNodeEnv ? require('./../sjl') : window.sjl || {},
         contextName = 'sjl.validator.Validator',
         Validator = function Validator(/** ...options {Object} **/) {
             var _messages = [],

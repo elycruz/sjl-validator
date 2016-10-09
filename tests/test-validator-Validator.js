@@ -8,7 +8,7 @@ describe('sjl.validator.Validator', function () {
     // generating browser version of test(s).
     'use strict';
     var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
+        sjl = require('./../src/sjl'),
         expect = chai.expect;
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~

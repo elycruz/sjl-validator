@@ -23,7 +23,7 @@
     //}
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        sjl = isNodeEnv ? require('./../sjl') : window.sjl || {},
         Validator = sjl.validator.Validator,
         contextName = 'sjl.validator.NumberValidator',
         //InRangeValidator = sjl.validator.InRangeValidator,

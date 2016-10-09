@@ -6,7 +6,7 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        sjl = isNodeJs ? require('./../sjl') : window.sjl,
         StringToLowerFilter = sjl.filter.Filter.extend({
             constructor: function StringToLowerFilter(value) {
                 if (!sjl.isset(this)) {

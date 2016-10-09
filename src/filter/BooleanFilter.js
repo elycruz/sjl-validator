@@ -7,7 +7,7 @@
     'use strict';
 
     var isNodeJs = typeof window === 'undefined',
-        sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        sjl = isNodeJs ? require('./../sjl') : window.sjl,
         contextName = 'sjl.filter.Filter',
         Filter = sjl.filter.Filter,
 

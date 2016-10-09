@@ -3,18 +3,29 @@
  */
 (function () {
 
-    if (typeof window === 'undefined') {
-        module.exports = function (sjl) {
-            var sjl = sjl || require('sjljs'),
-                ns = new sjl.nodejs.Namespace(__dirname);
-            sjl.extend(sjl.ns, ns);
-            sjl.extend(sjl, ns);
-            return sjl;
-        };
+    var nodeEnv = typeof window === 'undefined',
+        sjl,
+        ns;
+
+    // Get `sjl` and `sjl.ns`
+    if (nodeEnv) {
+        sjl = require('sjljs');
+        ns = new sjl.nodejs.Namespace(__dirname);
+    }
+    else {
+        sjl = window.sjl;
+        ns = sjl.ns;
     }
 
-    // If is amd return self
-    if (window.__isAmd) {
+    // Extend existing sjl namespaces
+    sjl.extend(sjl.ns, ns);
+    sjl.extend(sjl, ns);
+
+    // Export sjl
+    if (nodeEnv) {
+        module.exports = sjl;
+    }
+    else if (window && window.__isAmd) {
         return window.sjl.ns;
     }
 

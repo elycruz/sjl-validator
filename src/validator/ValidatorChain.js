@@ -7,7 +7,7 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        sjl = isNodeEnv ? require('./../sjl') : window.sjl || {},
         contextName = 'sjl.validator.ValidatorChain',
         ObjectIterator = sjl.stdlib.ObjectIterator,
         Validator = sjl.validator.Validator,

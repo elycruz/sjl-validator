@@ -7,7 +7,7 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
+        sjl = isNodeEnv ? require('./../sjl') : window.sjl || {},
         RegexValidator = sjl.validator.RegexValidator,
         DigitValidator = function DigitValidator (/**...options {Object}**/) {
             RegexValidator.apply(this, [{
