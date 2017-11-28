@@ -1,0 +1,24 @@
+{
+  "name": "sjl-validator",
+  "version": "1.0.0",
+  "description": "A set of common validators needed for both front and backend development with javascript (\r copied over from zend framework's Zend\\Validator and Zend\\Filter packages (with some modifications\r to adhere to javascript and a more functional coding style).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elycruz/sjl-validator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elycruz/sjl-validator/issues"
+  },
+  "homepage": "https://github.com/elycruz/sjl-validator#readme",
+  "dependencies": {
+    "fjl": "^0.17.10",
+    "fjl-mutable": "^0.14.0"
+  }
+}
