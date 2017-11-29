@@ -2,27 +2,34 @@
  * Created by Ely on 7/21/2014.
  * Initial idea borrowed from Zend Framework 2's Zend/Validator
  */
-import {assignDeep, isset, isType, typeOf, call, isFunction} from 'fjl';
+import {assignDeep, assign, isset,
+    isType, typeOf, call, isFunction,
+    apply, repeat,
+    concat} from 'fjl';
 
-import {defineEnumProps$} from 'fjl-mutable';
+import {defineEnumProps$, defineEnumProp$} from 'fjl-mutable';
 
 export const
 
-    addErrorByKey = (key, value, validator) => {
-        const {messageTemplates, messages} = validator;
+    defaultValueObscurator = x => repeat((x + '').length, '*'),
+
+    getErrorMsgByKey = (key, value, options) => {
+        let message;
+        const {messageTemplates, valueObscured, valueObscurator} = options,
+            _value = valueObscured ? valueObscurator(value) : value;
         if (isFunction(key)) {
-            messages.push(call(key, value, validator));
+            message = call(key, _value, options);
         }
         else if (!messageTemplates[key]) {
-            return validator;
+            return '';
         }
         else if (isFunction(messageTemplates[key])) {
-            messages.push(call(messageTemplates[key], value, validator));
+            message = call(messageTemplates[key], _value, options);
         }
         else {
-            messages.push(messageTemplates[key]);
+            message = messageTemplates[key];
         }
-        return validator;
+        return message;
     },
 
     clearMessages = validator => {
@@ -30,34 +37,63 @@ export const
         return validator;
     };
 
-export default class Validator {
-
-    constructor (options) {
+export class ValidationOptions {
+    constructor (...options) {
         defineEnumProps$([
-            [Array, 'messages', []],
             [Number, 'messagesMaxLength', 100],
-            [Object, 'messageTemplates', {}],
-            [Boolean, 'valueObscured', false]
+            [Object, 'messageTemplates', assign({}, this.constructor.messageTemplates)],
+            [Boolean, 'valueObscured', false],
+            [Function, 'valueObscurator', defaultValueObscurator]
         ], this);
         if (options) {
-            assignDeep(this, options);
+            assignDeep.apply(null, [this].concat(options));
         }
+    }
+}
+
+export class ValidationResult {
+    constructor (options) {
+        defineEnumProps$([
+            [Boolean, 'result', false],
+            [Array, 'messages', []]
+        ], this);
+        this.value = undefined;
+        this.filteredValue = undefined;
+        assign(this, options);
+    }
+}
+
+export default class Validator {
+    constructor (...options) {
+        defineEnumProps$([
+            [Array, 'messages', []],
+            [ValidationOptions, 'options', new ValidationOptions(...options)]
+        ], this);
+
+        // Merge options to self for easier access
+        assignDeep(this, this.options);
     }
 
     addErrorByKey (key, value) {
-        return addErrorByKey(key, value, this);
+        const message = getErrorMsgByKey(key, value, this);
+        if (message) {
+            this.messages.push(message);
+        }
+        return this;
     }
 
     clearMessages () {
         return clearMessages(this);
     }
 
-    validate (value) {
-        return this.isValid(value);
+    validate (/*value*/) { // Returns `ValidationResult`
+        throw Error('This method should be overwritten by extending class.');
     }
 
-    isValid (/*value*/) {
-        throw Error('Can not instantiate `Validator` directly.  It should be extended instead.');
+    isValid (value) {
+        return this.validate(value).result;
     }
 
 }
+
+Validator.messageTemplates = {};

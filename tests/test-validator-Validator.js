@@ -8,36 +8,6 @@ import Validator from '../src/validator/Validator';
 
 describe('sjl.validator.Validator', function () {
 
-    const expectedPropertyAndTypes = {
-            messages: 'Array',
-            messagesMaxLength: 'Number',
-            messageTemplates: 'Object',
-            valueObscured: 'Boolean'
-            // value: 'Null'
-        },
-        expectedMethodNames = [
-            'addErrorByKey',
-            'clearMessages',
-            'validate',
-            'isValid'
-        ];
-
-    it('should have the expected properties as expected types.', function () {
-        var validator = new Validator();
-        Object.keys(expectedPropertyAndTypes).forEach(key => {
-            expect(validator.hasOwnProperty(key)).to.equal(true);
-            expect(typeOf(validator[key])).to.equal(expectedPropertyAndTypes[key]);
-        });
-    });
-
-    it('should have the expected methods.', function () {
-        var validator = new Validator();
-        expectedMethodNames.forEach(function (methodName) {
-            expect(typeof validator[methodName]).to.equal('function');
-            expect(typeof Validator.prototype[methodName]).to.equal('function');
-        });
-    });
-
     describe('#Construction', function () {
         it('should merge incoming options to `self` on construction', function () {
             const messageTemplates = {
@@ -60,6 +30,35 @@ describe('sjl.validator.Validator', function () {
             const v2 = new Validator({messages});
             v2.messages.forEach((m, ind) => {
                 expect(m).to.equal(messages[ind]);
+            });
+        });
+
+        const expectedPropertyAndTypes = {
+                messages: 'Array',
+                messagesMaxLength: 'Number',
+                valueObscured: 'Boolean'
+                // value: 'Null'
+            },
+            expectedMethodNames = [
+                'addErrorByKey',
+                'clearMessages',
+                'validate',
+                'isValid'
+            ];
+
+        it('should have the expected properties as expected types.', function () {
+            let validator = new Validator();
+            Object.keys(expectedPropertyAndTypes).forEach(key => {
+                expect(validator.hasOwnProperty(key)).to.equal(true);
+                expect(typeOf(validator[key])).to.equal(expectedPropertyAndTypes[key]);
+            });
+        });
+
+        it('should have the expected methods.', function () {
+            let validator = new Validator();
+            expectedMethodNames.forEach(function (methodName) {
+                expect(typeof validator[methodName]).to.equal('function');
+                expect(typeof Validator.prototype[methodName]).to.equal('function');
             });
         });
     });

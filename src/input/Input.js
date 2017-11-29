@@ -5,8 +5,7 @@
  *      functionality for javascript
  */
 import {defineEnumProps$} from 'fjl-mutable';
-import {errorIfNotType$} from 'fjl-error-throwing';
-import {assign, concat, isString, isUndefined} from 'fjl';
+import {assign, compose, concat, isString, isUndefined} from 'fjl';
 
 class ValidationResult {
     constructor (options) {
@@ -94,7 +93,7 @@ const
         };
     },
 
-    runFilters = (filters, value) => apply(compose, filters)(value),
+    runFilters = (filters, value) => apply(compose, filters)(value)
 
-    hasFallbackValue = () => !isUndefined(input.fallbackValue)
+    // hasFallbackValue = () => !isUndefined(input.fallbackValue)
 ;
