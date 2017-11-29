@@ -10,8 +10,8 @@ export default class DigitValidator extends RegexValidator {
             messageTemplates: {
                 DOES_NOT_MATCH_PATTERN: value =>
                     `The value passed in contains non digital characters.  ` +
-                        `Value received: "${this.value}".`
+                        `Value received: "${value}".`
             }
-        }, options);
+        }, ...options);
     }
 }

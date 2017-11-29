@@ -41,7 +41,7 @@ export class ValidationOptions {
     constructor (...options) {
         defineEnumProps$([
             [Number, 'messagesMaxLength', 100],
-            [Object, 'messageTemplates', assign({}, this.constructor.messageTemplates)],
+            [Object, 'messageTemplates', {}],
             [Boolean, 'valueObscured', false],
             [Function, 'valueObscurator', defaultValueObscurator]
         ], this);
@@ -64,10 +64,14 @@ export class ValidationResult {
 }
 
 export default class Validator {
+
     constructor (...options) {
         defineEnumProps$([
             [Array, 'messages', []],
-            [ValidationOptions, 'options', new ValidationOptions(...options)]
+            [ValidationOptions, 'options', new ValidationOptions(
+                {messageTemplates: this.constructor.messageTemplates},
+                ...options
+            )]
         ], this);
 
         // Merge options to self for easier access
