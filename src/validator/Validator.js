@@ -6,6 +6,30 @@ import {assignDeep, isset, isType, typeOf, call, isFunction} from 'fjl';
 
 import {defineEnumProps$} from 'fjl-mutable';
 
+export const
+
+    addErrorByKey = (key, value, validator) => {
+        const {messageTemplates, messages} = validator;
+        if (isFunction(key)) {
+            messages.push(call(key, value, validator));
+        }
+        else if (!messageTemplates[key]) {
+            return validator;
+        }
+        else if (isFunction(messageTemplates[key])) {
+            messages.push(call(messageTemplates[key], value, validator));
+        }
+        else {
+            messages.push(messageTemplates[key]);
+        }
+        return validator;
+    },
+
+    clearMessages = validator => {
+        validator.messages = [];
+        return validator;
+    };
+
 export default class Validator {
 
     constructor (options) {
@@ -21,26 +45,11 @@ export default class Validator {
     }
 
     addErrorByKey (key, value) {
-        const self = this,
-            {messageTemplates, messages} = self;
-        if (isFunction(key)) {
-            messages.push(call(key, value, self));
-        }
-        else if (!messageTemplates[key]) {
-            return self;
-        }
-        else if (isFunction(messageTemplates[key])) {
-            messages.push(call(messageTemplates[key], value, self));
-        }
-        else {
-            messages.push(messageTemplates[key]);
-        }
-        return self;
+        return addErrorByKey(key, value, this);
     }
 
     clearMessages () {
-        this.messages = [];
-        return this;
+        return clearMessages(this);
     }
 
     validate (value) {
