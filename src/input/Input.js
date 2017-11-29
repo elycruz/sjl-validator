@@ -37,8 +37,6 @@ class Input {
                                                 // of this functionality
         ], this);
 
-        this.value;
-
         if (isString(options)) {
             this.name = options;
         }
@@ -46,24 +44,28 @@ class Input {
             assign(this, options);
         }
     }
+
+    isValid (value) {
+        return isValid(value, input);
+    }
 }
 
 const
 
-    isValid = input => {
-        const {validators, filters, value: rawValue} = input,
+    isValid = (value, input) => {
+        const {validators, filters} = input,
             validationResult = runValidators(validators, value, breakOnFailure),
             {result} = validationResult;
 
         if (result) {
-            validationResult.filteredValue = runFilters(filters, rawValue);
-            validationResult.value = rawValue;
+            validationResult.filteredValue = runFilters(filters, value);
+            validationResult.value = value;
         }
 
         return new ValidationResult(validationResult);
     },
 
-    validate = input => isValid(input),
+    validate = (value, input) => isValid(input),
 
     runValidators = (validators, value, breakOnFailure) => {
         const limit = validators.length;
