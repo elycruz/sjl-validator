@@ -4,7 +4,7 @@
   "description": "A set of common validators needed for both front and backend development with javascript (\r copied over from zend framework's Zend\\Validator and Zend\\Filter packages (with some modifications\r to adhere to javascript and a more functional coding style).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha tests/test-*.js --plugins babel-plugin-add-module-exports --require babel-register"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,13 @@
   "homepage": "https://github.com/elycruz/sjl-validator#readme",
   "dependencies": {
     "fjl": "^0.17.10",
+    "fjl-error-throwing": "^0.7.5",
     "fjl-mutable": "^0.14.0"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
   }
 }

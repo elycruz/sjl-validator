@@ -6,16 +6,16 @@
  */
 import {defineEnumProps$} from 'fjl-mutable';
 import {errorIfNotType$} from 'fjl-error-throwing';
-import {assign, concat} from 'fjl';
+import {assign, concat, isString, isUndefined} from 'fjl';
 
 class ValidationResult {
-    constructor (options)
+    constructor (options) {
         defineEnumProps$([
             [Boolean, 'result', false],
             [Array, 'messages']
         ], this);
-        this.value;
-        this.filteredValue;
+        this.value = undefined;
+        this.filteredValue = undefined;
         assign(this, options);
     }
 }
@@ -68,13 +68,14 @@ const
     validate = (value, input) => isValid(input),
 
     runValidators = (validators, value, breakOnFailure) => {
-        const limit = validators.length;
+        const limit = validators.length,
+            results = [];
         let result = true,
             i = 0;
 
         for (i = 0; i < limit; i += 1) {
             const [isValid, messages] = validators[i](value);
-            validationResults.push([result, messages]);
+            results.push([result, messages]);
             if (!isValid) {
                 result = false;
                 if (breakOnFailure) {
@@ -89,7 +90,7 @@ const
             value,
 
             // if messages pull them out and concat into one array or empty array
-            messages: !result ? concat(results.map(([_, msgs] => msgs)) : []
+            messages: !result ? concat(results.map(([_, msgs]) => msgs)) : []
         };
     },
 
