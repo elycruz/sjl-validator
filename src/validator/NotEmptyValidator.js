@@ -2,6 +2,7 @@
  * Created by Ely on 7/21/2014.
  */
 import Validator, {ValidationResult, getErrorMsgByKey} from "./Validator";
+import {isEmpty} from 'fjl';
 
 export const
     validate = (value, options) => {

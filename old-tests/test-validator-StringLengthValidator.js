@@ -17,14 +17,6 @@ describe('sjl.validator.StringLengthValidator', function () {
         Validator = sjl.validator.Validator,
         generalValidator = new StringLengthValidator();
 
-    function repeatStr(str, times) {
-        var out = '';
-        while (out.length < times) {
-            out += str;
-        }
-        return out;
-    }
-
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
     });
@@ -69,8 +61,8 @@ describe('sjl.validator.StringLengthValidator', function () {
                 [true, 'within', 'sallysellsseashellsdownbytheseashore'],
                 [true, 'within', 'hello[]world'],
                 [true, 'within', '99 bottles of beer on the wall'],
-                [false, 'without', repeatStr('a', 56)],
-                [false, 'without', repeatStr('b', 99)]
+                [false, 'without', repeat(56, 'a')],
+                [false, 'without', repeat(99, 'b')]
             ];
 
         // Validate values and expect value[0] to be return value of validation check

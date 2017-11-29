@@ -6,13 +6,13 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
         contextName = 'sjl.validator.ValidatorChain',
         ObjectIterator = sjl.stdlib.ObjectIterator,
         Validator = sjl.validator.Validator,
         ValidatorChain = function ValidatorChain(/*...options {Object}*/) {
-            var _breakChainOnFailure = false,
+            let _breakChainOnFailure = false,
                 _validators = [];
             Object.defineProperties(this, {
                 validators: {
@@ -45,7 +45,7 @@
     ValidatorChain = Validator.extend(ValidatorChain, {
 
         isValid: function (value) {
-            var self = this,
+            let self = this,
                 retVal,
                 validators;
 
@@ -61,7 +61,7 @@
             if (self.breakChainOnFailure) {
                 // If `some` value is not valid reverse return value of `some`
                 retVal = !validators.some(function (validator) {
-                    var out = false;
+                    let out = false;
                     if (!validator.isValid(value)) {
                         // Append error messages
                         self.appendMessages(validator.messages);
@@ -73,7 +73,7 @@
             else {
                 // Check if every `validator` validates `value` to `true`
                 retVal = validators.every(function (validator) {
-                    var out = true;
+                    let out = true;
                     if (!validator.isValid(value)) {
                         // Append error messages
                         self.appendMessages(validator.messages);
@@ -96,7 +96,7 @@
         },
 
         addValidator: function (validator) {
-            var self = this;
+            let self = this;
             if (this.isValidator(validator)) {
                 self.validators.push(validator);
             }
@@ -113,7 +113,7 @@
                 }, this);
             }
             else if (sjl.classOfIs(validators, 'Object')) {
-                var iterator = new ObjectIterator(validators);
+                let iterator = new ObjectIterator(validators);
                 iterator.forEach(function (value, key) {
                     this.addValidator(value);
                 }, this);
@@ -152,7 +152,7 @@
         },
 
         appendMessages: function (messages) {
-            var self = this;
+            let self = this;
             if (sjl.isEmptyOrNotOfType(messages, Array)) {
                 this._throwTypeError('appendMessages', Array, messages);
             }

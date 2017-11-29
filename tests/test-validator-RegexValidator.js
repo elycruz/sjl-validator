@@ -18,7 +18,6 @@ describe('sjl.validator.RegexValidator`', function () {
             it('should return ' + expected + ' when testing "' + key + '" with "' + keyValMap[key] + '".', function () {
                 const value = keyValMap[key],
                 validator = new RegexValidator({pattern: new RegExp(key, 'i')});
-                console.log(validator.pattern, 'value', validator.pattern.test(value));
                 expect(validator.isValid(value)).to.equal(expected);
             });
         });

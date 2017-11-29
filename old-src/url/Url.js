@@ -5,13 +5,13 @@
 
     "use strict";
 
-    var Url,
+    let Url,
         isNodeJs = typeof window === 'undefined',
         Constructors,
         Constructor;
 
     function setUrlObjProperties (context) {
-        var _href;
+        let _href;
 
         Object.defineProperties(context, {
             href: {

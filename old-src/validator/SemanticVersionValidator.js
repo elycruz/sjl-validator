@@ -16,12 +16,12 @@
         }
     }
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
         Validator = sjl.validator.Validator,
         contextName = 'sjl.validator.SemanticVersionValidator',
         SemanticVersionValidator = function SemanticVersionValidator (/**...options {Object}**/) {
-            var _maxNumericIdLength = SemanticVersionValidator.MAX_NUMERIC_ID_LENGTH,
+            let _maxNumericIdLength = SemanticVersionValidator.MAX_NUMERIC_ID_LENGTH,
                 _maxAlphaNumericIdLength = SemanticVersionValidator.MAX_ALPHA_NUMERIC_ID_LENGTH,
                 _messageTemplates = {
                 

@@ -6,13 +6,13 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
         contextName = 'sjl.filter.FilterChain',
         ObjectIterator = sjl.stdlib.ObjectIterator,
         Filter = sjl.filter.Filter,
         FilterChain = function FilterChain(filters) {
-            var _filters = [];
+            let _filters = [];
             Object.defineProperties(this, {
                 filters: {
                     get: function () {
@@ -47,7 +47,7 @@
         },
 
         addFilter: function (filter) {
-            var self = this;
+            let self = this;
             if (this.isFilter(filter)) {
                 self.filters.push(filter);
             }
@@ -64,7 +64,7 @@
                 }, this);
             }
             else if (sjl.classOfIs(filters, 'Object')) {
-                var iterator = new ObjectIterator(filters);
+                let iterator = new ObjectIterator(filters);
                 iterator.forEach(function (value, key) {
                     this.addFilter(value);
                 }, this);

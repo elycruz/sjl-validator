@@ -12,12 +12,12 @@
         }
     }
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
         Validator = sjl.validator.Validator,
         contextName = 'sjl.validator.StringLength',
         StringLengthValidator = function StringLengthValidator (/**...options {Object}**/) {
-            var _min = 0,
+            let _min = 0,
                 _max = Number.POSITIVE_INFINITY; // inifinite
             Object.defineProperties(this, {
                 min: {
@@ -66,7 +66,7 @@
 
     StringLengthValidator = Validator.extend(StringLengthValidator, {
         isValid: function (value) {
-            var self = this,
+            let self = this,
                 retVal,
                 classOfValue;
 

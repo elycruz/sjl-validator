@@ -22,7 +22,7 @@
     //    this[1] = value;
     //}
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
         Validator = sjl.validator.Validator,
         contextName = 'sjl.validator.NumberValidator',
@@ -31,7 +31,7 @@
             // Apply Validator to self
             Validator.apply(this);
 
-            var _messageTemplates = {
+            let _messageTemplates = {
                     NOT_A_NUMBER: function (value, validator) {
                         return 'Value "' + value + '" is not a number.';
                     },
@@ -277,7 +277,7 @@
     NumberValidator = Validator.extend(NumberValidator, {
 
         isValid: function (value) {
-            var self = this,
+            let self = this,
 
                 // Return value
                 retVal,
@@ -335,7 +335,7 @@
         },
 
         _parseValidationFunctions: function (functions, value) {
-            var funcsLen = functions.length,
+            let funcsLen = functions.length,
                 resultSet,
                 i;
             for (i = 0; i < funcsLen; i += 1) {
@@ -349,7 +349,7 @@
         },
 
         _validateHex: function (value) {
-            var retVal = [0, value],
+            let retVal = [0, value],
                 isHexString = value.length > 0 && value[1] === 'x',
                 isValidFormat;
             if (isHexString) {
@@ -373,7 +373,7 @@
         },
 
         _validateSigned: function (value) {
-            var retVal = [0, value];
+            let retVal = [0, value];
             // If no signed numbers allowed add error if number has sign
             if (!this.allowSigned && /^(:?\-|\+)/.test(value)) {
                 this.addErrorByKey('NOT_ALLOWED_SIGNED');
@@ -383,7 +383,7 @@
         },
 
         _validateComma: function (value) {
-            var out = [0, value],
+            let out = [0, value],
                 valueHasCommas = /,/.test(value),
                 replacedString;
             if (valueHasCommas) {
@@ -407,7 +407,7 @@
         },
 
         _validateFloat: function (value) {
-            var out = [0, value];
+            let out = [0, value];
             if (!this.allowFloat && /\.{1}/g.test(value)) {
                 this.addErrorByKey('NOT_ALLOWED_FLOAT');
                 out[0] = -1;
@@ -416,7 +416,7 @@
         },
 
         _validateBinary: function (value) {
-            var out = [0, value],
+            let out = [0, value],
                 possibleBinary = value.length > 0 && value[1] === 'b',
                 isValidBinaryValue;
             if (possibleBinary) {
@@ -440,7 +440,7 @@
         },
 
         _validateOctal: function (value) {
-            var out = [0, value],
+            let out = [0, value],
                 possibleOctal = /^0\d/.test(value),
                 isValidOctalValue;
             if (possibleOctal) {
@@ -464,7 +464,7 @@
         },
 
         _validateScientific: function (value) {
-            var out = [0, value],
+            let out = [0, value],
                 possibleScientific = /\de/.test(value),
                 isValidScientificValue;
             if (possibleScientific) {
@@ -488,7 +488,7 @@
         },
 
         _validateRange: function (value) {
-            var out = [0, value];
+            let out = [0, value];
             if (this.checkRange) {
                 if (this.inclusive && (value < this.min || value > this.max)) {
                     out[0] = -1;

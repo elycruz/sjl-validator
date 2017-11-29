@@ -6,7 +6,7 @@
 
     'use strict';
 
-    var isNodeJs = typeof window === 'undefined',
+    let isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('../fjlInputFilter') : window.sjl,
         contextName = 'sjl.filter.Filter',
         Filter = sjl.filter.Filter,
@@ -16,7 +16,7 @@
                 if (!sjl.isset(this)) {
                     return BooleanFilter.filter(valueOrOptions);
                 }
-                var _allowCasting = true,       // Boolean
+                let _allowCasting = true,       // Boolean
                     _translations = {},         // Object<String, Boolean>
                     _conversionRules = 'all';      // Array<String>
                 Object.defineProperties(this, {
@@ -60,7 +60,7 @@
         });
 
     function loopThroughTranslations(value, translations) {
-        var retVal,
+        let retVal,
             translationKeys = Object.keys(translations),
             keysLen = translationKeys.length,
             i, key;
@@ -75,7 +75,7 @@
     }
 
     function normalizeConversionRules (rules) {
-        var conversionRuleKeys,
+        let conversionRuleKeys,
             conversionRules;
 
         // If 'all' was passed in
@@ -88,7 +88,7 @@
     }
 
     function loopThroughConversionRules (value, conversionRules, translations) {
-        var retVal,
+        let retVal,
             result, i, rule,
             rulesLength,
             rules = normalizeConversionRules(conversionRules);
@@ -115,7 +115,7 @@
     }
 
     function castValue(value, allowCasting, conversionRules, translations) {
-        var retVal;
+        let retVal;
         if (sjl.isBoolean(value)) {
             retVal = value;
         }
@@ -144,7 +144,7 @@
     }
 
     function castString(value, translations) {
-        var retVal;
+        let retVal;
         if (sjl.notEmptyAndOfType(value, String) &&
             sjl.notEmptyAndOfType(translations, Object)) {
             retVal = loopThroughTranslations(value, translations);
@@ -157,7 +157,7 @@
     }
 
     function castArray (value) {
-        var retVal;
+        let retVal;
         if (Array.isArray(value)) {
             retVal = value.length !== 0;
         }
@@ -165,7 +165,7 @@
     }
 
     function castObject (value) {
-        var retVal;
+        let retVal;
         if (sjl.isObject(value)) {
             retVal = Object.keys(value).length !== 0;
         }
@@ -177,7 +177,7 @@
     }
 
     function castFalseString (value) {
-        var retVal;
+        let retVal;
         if (sjl.notEmptyAndOfType(value, String)) {
             retVal = ['null', 'false', 'undefined', '0', '[]', '{}'].indexOf(value) === -1;
         }
@@ -185,7 +185,7 @@
     }
 
     function castYesNo (value, translations) {
-        var retVal,
+        let retVal,
             defaultTrans = {yes: true, no: false};
         if (sjl.notEmptyAndOfType(value, String)) {
             retVal = loopThroughTranslations(value, sjl.extend(defaultTrans, translations));

@@ -6,7 +6,7 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter.js') : window.sjl || {},
         Input = sjl.input.Input,
         contextName = 'sjl.input.InputFilter',
@@ -14,7 +14,7 @@
             sjl.throwTypeErrorIfEmpty(contextName + '.' + methodName, 'key', key, String);
         },
         InputFilter = function InputFilter(options) {
-            var _data = {},
+            let _data = {},
                 _inputs = {},
                 _invalidInputs = {},
                 _validInputs = {},
@@ -109,7 +109,7 @@
         },
 
         removeInput: function (key) {
-            var inputs = this.inputs,
+            let inputs = this.inputs,
                 retVal;
             if (inputs.hasOwnProperty(key)) {
                 retVal = inputs[key];
@@ -119,7 +119,7 @@
         },
 
         isValid: function () {
-            var self = this;
+            let self = this;
 
             self.clearInvalidInputs()
                 .clearValidInputs()
@@ -148,7 +148,7 @@
         },
 
         getRawValues: function () {
-            var self = this,
+            let self = this,
                 rawValues = {};
             sjl.forEachInObj(self.inputs, function (input, key) {
                 if (!self.invalidInputs.hasOwnProperty(key)) {
@@ -159,7 +159,7 @@
         },
 
         getValues: function () {
-            var self = this,
+            let self = this,
                 values = {};
             sjl.forEachInObj(self.inputs, function (input, key) {
                 if (!self.invalidInputs.hasOwnProperty(key)) {
@@ -170,10 +170,10 @@
         },
 
         getMessages: function () {
-            var self = this,
+            let self = this,
                 messages = self.messages;
             sjl.forEachInObj(this.invalidInputs, function (input) {
-                var messageItem;
+                let messageItem;
                 if (sjl.notEmptyAndOfType(input, Input)) {
                     messageItem = messages[input.alias];
                 }
@@ -257,7 +257,7 @@
 
         _validateInput: function (input, dataMap) {
             dataMap = dataMap || this.data;
-            var name = input.alias,
+            let name = input.alias,
                 dataExists = sjl.isset(dataMap[name]),
                 data = dataExists ? dataMap[name] : null,
                 required = input.required,
@@ -302,7 +302,7 @@
         _validateInputs: function (inputs, data) {
             data = data || this.data;
             inputs = inputs || this.inputs;
-            var self = this;
+            let self = this;
 
             // Validate inputs
             sjl.forEach(inputs, function (input, key) {

@@ -7,11 +7,11 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
         contextName = 'sjl.validator.Validator',
         Validator = function Validator(/** ...options {Object} **/) {
-            var _messages = [],
+            let _messages = [],
                 _messagesMaxLength = 100,
                 _messageTemplates = {},
                 _valueObscured = false,
@@ -85,7 +85,7 @@
          */
         addErrorByKey: function (key, value) {
             value = typeof value !== 'undefined' ? value : this.value;
-            var self = this,
+            let self = this,
                 messageTemplate = self.messageTemplates,
                 messages = self.messages;
 

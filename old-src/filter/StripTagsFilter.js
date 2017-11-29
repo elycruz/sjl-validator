@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var isNodeJs = typeof window === 'undefined',
+    let isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('../fjlInputFilter') : window.sjl,
         contextName = 'sjl.filter.StripTagsFilter',
         StripTagsFilter = sjl.filter.Filter.extend({
@@ -13,7 +13,7 @@
                 if (!sjl.isset(this)) {
                     return StripTagsFilter.filter.apply(null, arguments);
                 }
-                var _tags,
+                let _tags,
                     _stripComments = false,
                     _attribs;
                 Object.defineProperties(this, {
@@ -84,7 +84,7 @@
     }
 
     function createTagRegexPartial (tag) {
-        var spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
+        let spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
         return '(<(' + tag + ')' +
         '(?:' + StripTagsFilter.ATTRIB_REGEX_PARTIAL + ')*' + spacePartial + '>' +
             '.*' +
@@ -103,9 +103,9 @@
                 'Only valid html tag names allowed in `tags` list.  ' +
                 'Tags received: "' + tags + '".');
         }
-        var out = value;
+        let out = value;
         tags.forEach(function (tag) {
-            var regex = new RegExp(createTagRegexPartial(tag), 'gim');
+            let regex = new RegExp(createTagRegexPartial(tag), 'gim');
             out = out.replace(regex, '');
         });
         return out;
@@ -118,9 +118,9 @@
         else if (!validateAttribs(attribs)) {
             throw new Error ('Attribs mismatch');
         }
-        var out = value;
+        let out = value;
         attribs.forEach(function (attrib) {
-            var regex = new RegExp(
+            let regex = new RegExp(
                         '([\\n\\r\\t\\s]*' + attrib + '=\\"[^\\"]*\\")',
                     'gim'
                 );
@@ -135,7 +135,7 @@
         ATTRIB_REGEX_PARTIAL: {value:'[\\n\\r\\t\\s]*[a-z][a-z\\-\\d]*=\\"[^\\"]*\\"', enumerable: true},
         filter: {
             value: function (value, tags, attribs, removeComments) {
-                var out = stripTags(removeComments ? stripComments(value) : value, tags, attribs);
+                let out = stripTags(removeComments ? stripComments(value) : value, tags, attribs);
                 return sjl.isEmptyOrNotOfType(attribs, Array) ? out :
                     stripAttribs(out, attribs);
             },

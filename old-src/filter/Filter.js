@@ -11,7 +11,7 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    let isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl,
         Extendable = sjl.stdlib.Extendable,
 

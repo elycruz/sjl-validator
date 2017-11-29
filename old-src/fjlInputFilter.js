@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var nodeEnv = typeof window === 'undefined',
+    let nodeEnv = typeof window === 'undefined',
         sjl,
         ns;
 

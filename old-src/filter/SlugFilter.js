@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var isNodeJs = typeof window === 'undefined',
+    let isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('../fjlInputFilter') : window.sjl,
         SlugFilter = sjl.filter.Filter.extend({
             constructor: function SlugFilter(value) {
