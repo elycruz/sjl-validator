@@ -22,18 +22,18 @@ export default class Validator {
 
     addErrorByKey (key, value) {
         const self = this,
-            {messageTemplate, messages} = self;
-        if (!messageTemplate[key]) {
+            {messageTemplates, messages} = self;
+        if (isFunction(key)) {
+            messages.push(call(key, value, self));
+        }
+        else if (!messageTemplates[key]) {
             return self;
         }
-        if (isFunction(key)) {
-            messages.push(call(key, value, self.options));
-        }
-        if (isFunction(messageTemplate[key])) {
-            messages.push(call(messageTemplate[key], value, self.options));
+        else if (isFunction(messageTemplates[key])) {
+            messages.push(call(messageTemplates[key], value, self));
         }
         else {
-            messages.push(messageTemplate[key]);
+            messages.push(messageTemplates[key]);
         }
         return self;
     }
