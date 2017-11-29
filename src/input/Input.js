@@ -6,18 +6,7 @@
  */
 import {defineEnumProps$} from 'fjl-mutable';
 import {assign, compose, concat, isString, isUndefined} from 'fjl';
-
-class ValidationResult {
-    constructor (options) {
-        defineEnumProps$([
-            [Boolean, 'result', false],
-            [Array, 'messages']
-        ], this);
-        this.value = undefined;
-        this.filteredValue = undefined;
-        assign(this, options);
-    }
-}
+import {ValidationResult} from "../validator/Validator";
 
 class Input {
     constructor (options) {
