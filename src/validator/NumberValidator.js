@@ -3,9 +3,7 @@
  * Initial idea copied from the Zend Framework 2's Between Validator
  * @todo add `allowSigned` check(s).
  */
-(function () {
 
-    'use strict';
 
     /**
      * Container for defining/holding the result format of string validation operations within NumberValidator.
@@ -22,14 +20,8 @@
     //    this[1] = value;
     //}
 
-    let isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../fjlInputFilter') : window.sjl || {},
-        Validator = sjl.validator.Validator,
-        contextName = 'sjl.validator.NumberValidator',
-        //InRangeValidator = sjl.validator.InRangeValidator,
-        NumberValidator = function NumberValidator(/** ...options {Object}**/) {
-            // Apply Validator to self
-            Validator.apply(this);
+        class NumberValidator  {
+            constructor (options) {
 
             let _messageTemplates = {
                     NOT_A_NUMBER: function (value, validator) {
@@ -504,15 +496,3 @@
         },
 
     }); // End of `NumberValidator` declaration
-
-    if (isNodeEnv) {
-        module.exports = NumberValidator;
-    }
-    else {
-        sjl.ns('validator.NumberValidator', NumberValidator);
-        if (window.__isAmd) {
-            return NumberValidator;
-        }
-    }
-
-})();
