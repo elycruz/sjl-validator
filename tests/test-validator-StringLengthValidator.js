@@ -1,21 +1,14 @@
+import StringLengthValidator from '../src/validator/StringLengthValidator';
+import Validator from '../src/validator/Validator';
+import {typeOf, repeat} from 'fjl';
+import {expect} from 'chai';
+
 /**
  * Created by elyde on 1/15/2016.
  */
 describe('sjl.validator.StringLengthValidator', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('../old-src/fjlInputFilter'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var StringLengthValidator = sjl.validator.StringLengthValidator,
-        Validator = sjl.validator.Validator,
-        generalValidator = new StringLengthValidator();
+    const generalValidator = new StringLengthValidator();
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
@@ -23,14 +16,14 @@ describe('sjl.validator.StringLengthValidator', function () {
 
     describe ('instance properties', function () {
         it ('should have a min and max property.', function () {
-            expect(sjl.classOf(generalValidator.min)).to.equal(Number.name);
-            expect(sjl.classOf(generalValidator.max)).to.equal(Number.name);
+            expect(typeOf(generalValidator.min)).to.equal(Number.name);
+            expect(typeOf(generalValidator.max)).to.equal(Number.name);
         });
         it ('should have a default value of `0` for `min` property.', function () {
             expect(generalValidator.min).to.equal(0);
         });
-        it ('should have a default value of `' + Number.POSITIVE_INFINITY + '` for `max` property.', function () {
-            expect(generalValidator.max).to.equal(Number.POSITIVE_INFINITY);
+        it ('should have a default value of `' + Number.MAX_SAFE_INTEGER + '` for `max` property.', function () {
+            expect(generalValidator.max).to.equal(Number.MAX_SAFE_INTEGER);
         });
     });
 
