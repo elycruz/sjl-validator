@@ -65,11 +65,11 @@ export class ValidationResult {
 
 export default class Validator {
     constructor (options = {}) {
-        const {messageTemplates} = this.constructor;
+        const {defaultOptions} = this.constructor;
         defineEnumProps$([
             [Array, 'messages', []],
             [ValidationOptions, 'options', new ValidationOptions(
-                {messageTemplates}, options
+                defaultOptions, options
             )]
         ], this);
 
