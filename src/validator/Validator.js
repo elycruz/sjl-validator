@@ -45,8 +45,8 @@ export class ValidationOptions {
             [Boolean, 'valueObscured', false],
             [Function, 'valueObscurator', defaultValueObscurator]
         ], this);
-        if (options) {
-            assignDeep.apply(null, [this].concat(options));
+        if (options.length) {
+            assignDeep.apply(null, [this].concat(options.filter(x => isset(x))));
         }
     }
 }
@@ -64,13 +64,12 @@ export class ValidationResult {
 }
 
 export default class Validator {
-
-    constructor (...options) {
+    constructor (options = {}) {
+        const {messageTemplates} = this.constructor;
         defineEnumProps$([
             [Array, 'messages', []],
             [ValidationOptions, 'options', new ValidationOptions(
-                {messageTemplates: this.constructor.messageTemplates},
-                ...options
+                {messageTemplates}, options
             )]
         ], this);
 

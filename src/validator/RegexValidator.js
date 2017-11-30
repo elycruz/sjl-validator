@@ -22,22 +22,19 @@ export const
     };
 
 export default class RegexValidator extends Validator {
-    constructor (...options) {
-        super({
-            pattern: /./,
-            messageTemplates: {
-                DOES_NOT_MATCH_PATTERN: (value, validatorOptions) =>
-                    'The value passed in does not match pattern"'
-                    + validatorOptions.pattern + '".  Value passed in: "'
-                    + validatorOptions.value + '".'
-            }
-        }, ...options);
-    }
-
     validate (value) {
         const result = validate(value, this.options);
         this.clearMessages().messages = result.messages;
         return result;
     }
-
 }
+
+RegexValidator.defaultOptions = {
+    pattern: /./,
+    messageTemplates: {
+        DOES_NOT_MATCH_PATTERN: (value, options) =>
+            'The value passed in does not match pattern"'
+            + options.pattern + '".  Value passed in: "'
+            + options.value + '".'
+    }
+};

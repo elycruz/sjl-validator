@@ -16,18 +16,16 @@ export const
 ;
 
 export default class NotEmptyValidator extends Validator {
-    constructor (...options) {
-            super({
-                messageTemplates: {
-                    EMPTY_NOT_ALLOWED: () =>
-                        'Empty values are not allowed.'
-                }
-            }, ...options);
-        };
-
     validate (value) {
         const result = validate(value, this);
         this.messages = result.messages;
         return result;
     }
 }
+
+NotEmptyValidator.defaultOptions = {
+    messageTemplates: {
+        EMPTY_NOT_ALLOWED: () =>
+            'Empty values are not allowed.'
+    }
+};
