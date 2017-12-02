@@ -1,21 +1,11 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
+import NumberValidator from '../src/validator/NumberValidator';
+import Validator from '../src/validator/Validator';
+import {expect, assert} from 'chai';
 
 describe('sjl.validator.NumberValidator`', function () {
-
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('../old-src/fjlInputFilter'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var Validator = sjl.ns.validator.Validator,
-        NumberValidator = sjl.ns.validator.NumberValidator;
 
     // @note got algorithm from http://www.wikihow.com/Convert-from-Decimal-to-Hexadecimal
     const hexMap = [
@@ -24,26 +14,27 @@ describe('sjl.validator.NumberValidator`', function () {
         [12, 'C'], [13, 'D'], [14, 'E'], [15, 'F']
     ];
 
-    function numToHex(d) {
-        var q,
-            r,
-            a = [],
-            out = '0x';
+    function numToHex (d) {
+        let q, // quotient
+            r, // remainder
+            a = [], // aggregated
+            out = '0x',
+            i;
         do {
-            q = parseInt(d / 16, 10);
-            r = d - (q * 16);
+            q = parseInt(d / 16, 10); // quotient
+            r = d - (q * 16);         // remainder
             a.push(hexMap[r][1]);
-            d = q;
+            d = q;                    // dividend
         }
         while (q > 0);
-        for (var i = a.length - 1; i >= 0; i -= 1) {
+        for (i = a.length - 1; i >= 0; i -= 1) {
             out += a[i];
         }
         return out;
     }
 
-    function fib(limit) {
-        var out = [],
+    function fib (limit) {
+        let out = [],
             a = 0,
             b = 1;
         while (a <= limit) {
@@ -59,7 +50,7 @@ describe('sjl.validator.NumberValidator`', function () {
 
     function createValidationParser (validator, funcs) {
         return function (value) {
-            return validator._parseValidationFunctions.call(validator, funcs, value);
+            return validator.parseValidationFunctions.call(validator, funcs, value);
         };
     }
 
@@ -68,9 +59,9 @@ describe('sjl.validator.NumberValidator`', function () {
         expect((new NumberValidator()) instanceof NumberValidator).to.equal(true);
     });
 
-    describe('`_validateHex`', function () {
+    describe('`validateHex`', function () {
         it('should return an array of [1, Number] when hex value is a valid hex value.', function () {
-            var vals = fib(1000).map(function (value) {
+            let vals = fib(1000).map(function (value) {
                     return [value, numToHex(value), 1];
                 }),
                 validator,
@@ -80,7 +71,7 @@ describe('sjl.validator.NumberValidator`', function () {
             validator = new NumberValidator({allowHex: true});
 
             // Failing values
-            // Last index in inner arrays stand for untouched;  NumberValidator#_validate* functions return an array of
+            // Last index in inner arrays stand for untouched;  NumberValidator#validate* functions return an array of
             // [performedOpFlag{Number[-1,0,1]}, value{String|Number|*}]  `performedOpFlag` is:
             // -- -1 was candidate for test but test failed
             // -- 0 is not candidate so value wasn't touched
@@ -95,7 +86,7 @@ describe('sjl.validator.NumberValidator`', function () {
 
             // Test values
             vals.forEach(function (value, index) {
-                var checkedValuePair = validator._validateHex(value[1]);
+                let checkedValuePair = validator.validateHex(value[1]);
                 //console.log(blnValue, hexValue, checkedValuePair);
                 expect(checkedValuePair[1]).to.equal(vals[index][0]);
                 expect(checkedValuePair[0]).to.equal(vals[index][2]);
@@ -106,7 +97,7 @@ describe('sjl.validator.NumberValidator`', function () {
 
             // Test values
             failingVals.forEach(function (value, index) {
-                var checkedValuePair = validator._validateHex(value[1]);
+                let checkedValuePair = validator.validateHex(value[1]);
                 expect(checkedValuePair[1]).to.equal(failingVals[index][1]);
                 expect(checkedValuePair[0]).to.equal(failingVals[index][2]);
             });
@@ -116,9 +107,9 @@ describe('sjl.validator.NumberValidator`', function () {
         });
     });
 
-    describe('`_validateSigned', function () {
+    describe('`validateSigned', function () {
         it ('should return [-1, value] when value is a signed number.', function () {
-            var validator = new NumberValidator({allowSigned: false}),
+            let validator = new NumberValidator({allowSigned: false}),
                 values = [
                     // Should return failure (-1) and value
                     [-1, -3], [-1, -999.99], [-1, -0x99ff99], [-1, '+100'],
@@ -128,16 +119,16 @@ describe('sjl.validator.NumberValidator`', function () {
 
             // Test for `allowSigned` is false
             values.forEach(function (value, index) {
-                result = validator._validateSigned(value[1]);
+                result = validator.validateSigned(value[1]);
                 expect(result[0]).to.equal(values[index][0]);
                 expect(result[1]).to.equal(values[index][1]);
             });
         });
     });
 
-    describe('`_validateComma', function () {
+    describe('`validateComma', function () {
         it ('should return [-1, value] when value contains comma(s) and `allowComma` is `false`.', function () {
-            var validator = new NumberValidator(),
+            let validator = new NumberValidator(),
                 valuesWithCommas = [[-1, ',1,000,000,000', 1000000000], [-1, ',', ','], [-1, '1,000,000', 1000000], [-1, '+100,000', 100000]],
                 valuesWithCommas2 = [[1, ',1,000,000,000', 1000000000], [-1, ',', ','], [1, '1,000,000', 1000000], [1, '+100,000', 100000]],
                 valuesWithoutCommas = [[0, 99], [0, '123123.234e20'], [0, 0xff9900]],
@@ -146,7 +137,7 @@ describe('sjl.validator.NumberValidator`', function () {
 
             // Test for `allowComma` is false
             values.forEach(function (value, index) {
-                result = validator._validateComma(value[1]);
+                result = validator.validateComma(value[1]);
                 expect(result[0]).to.equal(values[index][0]);
                 expect(result[1]).to.equal(values[index][1]);
             });
@@ -154,16 +145,16 @@ describe('sjl.validator.NumberValidator`', function () {
             // Test for `allowComma` is true
             validator.allowCommas = true;
             valuesWithCommas2.forEach(function (value, index) {
-                result = validator._validateComma(value[1]);
+                result = validator.validateComma(value[1]);
                 expect(result[0]).to.equal(valuesWithCommas2[index][0]);
                 expect(result[1]).to.equal(valuesWithCommas2[index][2]);
             });
         });
     });
 
-    describe('`_validateFloat', function () {
+    describe('`validateFloat', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowFloat` is `false`.', function () {
-            var validator = new NumberValidator({allowFloat: false}),
+            let validator = new NumberValidator({allowFloat: false}),
                 valuesWithFloats = [[-1, ',1,000,000,000.00'], [-1, '.', '.'], [-1, '1,000,000.00'], [-1, '+100,000.00']],
                 valuesWithFloats2 = [[0, ',1,000,000,000.00'], [0, '.', '.'], [0, '1,000,000.00'], [0, '+100,000.00']],
                 //valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
@@ -172,7 +163,7 @@ describe('sjl.validator.NumberValidator`', function () {
 
             // Test for `allowFloat` is false
             valuesWithFloats.forEach(function (value, index) {
-                result = validator._validateFloat(value[1]);
+                result = validator.validateFloat(value[1]);
                 expect(result[0]).to.equal(valuesWithFloats[index][0]);
                 expect(result[1]).to.equal(valuesWithFloats[index][1]);
             });
@@ -180,23 +171,23 @@ describe('sjl.validator.NumberValidator`', function () {
             //// Test for `allowFloat` is true
             validator.allowFloat = true;
             valuesWithFloats2.forEach(function (value, index) {
-                result = validator._validateFloat(value[1]);
+                result = validator.validateFloat(value[1]);
                 expect(result[0]).to.equal(valuesWithFloats2[index][0]);
                 expect(result[1]).to.equal(valuesWithFloats2[index][1]);
             });
         });
     });
 
-    describe('`_validateBinary', function () {
+    describe('`validateBinary', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowBinary` is `false`.', function () {
-            var validator = new NumberValidator({allowBinary: false}),
+            let validator = new NumberValidator({allowBinary: false}),
                 binaryValues = [[-1, 'abcdefg'], [-1, '0b98345'], [-1, '0b111'], [0, '9999'], [0, 9999], [-1, 'bb010101'], [-1, '0b01010101']],
                 binaryValues2 = [[-1, 'abcdefg'], [-1, '0b98345'], [1, '0b111'], [0, '9999'], [0, 9999], [-1, 'bb010101'], [1, '0b01010101']],
                 result;
 
             // Test for `allowBinary` is false
             binaryValues.forEach(function (value, index) {
-                result = validator._validateBinary(value[1]);
+                result = validator.validateBinary(value[1]);
                 expect(result[0]).to.equal(binaryValues[index][0]);
                 expect(result[1]).to.equal(binaryValues[index][1]);
             });
@@ -204,7 +195,7 @@ describe('sjl.validator.NumberValidator`', function () {
             //// Test for `allowBinary` is true
             validator.allowBinary = true;
             binaryValues2.forEach(function (value, index) {
-                result = validator._validateBinary(value[1]);
+                result = validator.validateBinary(value[1]);
                 //console.log(result, binaryValues2[index]);
                 expect(result[0]).to.equal(binaryValues2[index][0]);
                 if (result[0] !== 1) {
@@ -217,16 +208,16 @@ describe('sjl.validator.NumberValidator`', function () {
         });
     });
 
-    describe('`_validateOctal', function () {
+    describe('`validateOctal', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowOctal` is `false`.', function () {
-            var validator = new NumberValidator({allowOctal: false}),
+            let validator = new NumberValidator({allowOctal: false}),
                 octalValues = [[0, '999'], [0, 999], [0, '0b111'], [-1, '0777'], [-1, '0757']],
                 octalValues2 = [[0, '999'], [0, 999], [0, '0b111'], [1, '0777'], [1, '0757']],
                 result;
 
             // Test for `allowOctal` is false
             octalValues.forEach(function (value, index) {
-                result = validator._validateOctal(value[1]);
+                result = validator.validateOctal(value[1]);
                 expect(result[0]).to.equal(octalValues[index][0]);
                 expect(result[1]).to.equal(octalValues[index][1]);
             });
@@ -234,7 +225,7 @@ describe('sjl.validator.NumberValidator`', function () {
             //// Test for `allowOctal` is true
             validator.allowOctal = true;
             octalValues2.forEach(function (value, index) {
-                result = validator._validateOctal(value[1]);
+                result = validator.validateOctal(value[1]);
                 expect(result[0]).to.equal(octalValues2[index][0]);
                 if (result[0] !== 1) {
                     expect(result[1]).to.equal(octalValues2[index][1]);
@@ -246,16 +237,16 @@ describe('sjl.validator.NumberValidator`', function () {
         });
     });
 
-    describe('`_validateScientific', function () {
+    describe('`validateScientific', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowScientific` is `false`.', function () {
-            var validator = new NumberValidator({allowScientific: false}),
+            let validator = new NumberValidator({allowScientific: false}),
                 scientificValues = [[0, '999'], [0, 999], [0, '0b111'], [-1, '10e10'], [-1, '-29.01e+29'], [-1, '29.01e-29'], [-1, '29.01e29'], [-1, '29e29']],
                 scientificValues2 = [[0, '999'], [0, 999], [0, '0b111'], [1, '10e10'], [1, '-29.01e+29'], [1, '29.01e-29'], [1, '29.01e29'], [1, '29e29']],
                 result;
 
             // Test for `allowScientific` is false
             scientificValues.forEach(function (value, index) {
-                result = validator._validateScientific(value[1]);
+                result = validator.validateScientific(value[1]);
                 expect(result[0]).to.equal(scientificValues[index][0]);
                 expect(result[1]).to.equal(scientificValues[index][1]);
             });
@@ -263,7 +254,7 @@ describe('sjl.validator.NumberValidator`', function () {
             //// Test for `allowScientific` is true
             validator.allowScientific = true;
             scientificValues2.forEach(function (value, index) {
-                result = validator._validateScientific(value[1]);
+                result = validator.validateScientific(value[1]);
                 expect(result[0]).to.equal(scientificValues2[index][0]);
                 if (result[0] !== 1) {
                     expect(result[1]).to.equal(scientificValues2[index][1]);
@@ -275,16 +266,16 @@ describe('sjl.validator.NumberValidator`', function () {
         });
     });
 
-    describe('`_validateRange', function () {
+    describe('`validateRange', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowRange` is `false`.', function () {
-            var validator = new NumberValidator({checkRange: false}),
+            let validator = new NumberValidator({checkRange: false}),
                 rangeValues = [[0, 999], [0, 100], [0, 'abc']],
                 rangeValues2 = [[-1, 999, 0, 998], [1, 999, 0, 999], [-1, 999, 99, 100]],
                 result;
 
             // Test for `allowRange` is false
             rangeValues.forEach(function (value, index) {
-                result = validator._validateRange(value[1]);
+                result = validator.validateRange(value[1]);
                 expect(result[0]).to.equal(rangeValues[index][0]);
                 expect(result[1]).to.equal(rangeValues[index][1]);
             });
@@ -294,7 +285,7 @@ describe('sjl.validator.NumberValidator`', function () {
             rangeValues2.forEach(function (value, index) {
                 validator.min = value[2];
                 validator.max = value[3];
-                result = validator._validateRange(value[1]);
+                result = validator.validateRange(value[1]);
                 //console.log(result, value);
                 expect(result[0]).to.equal(rangeValues2[index][0]);
                 expect(result[0]).to.equal(rangeValues2[index][0]);
@@ -303,16 +294,16 @@ describe('sjl.validator.NumberValidator`', function () {
         });
     });
 
-    describe('`_parseValidationFunctions`', function () {
-        var validator = new NumberValidator({
+    describe('`parseValidationFunctions`', function () {
+        let validator = new NumberValidator({
             allowHex: true,
             allowBinary: true,
             allowOctal: true,
             allowCommas: true,
             allowScientific: true
         }),
-            numTypeFuncs = ['_validateComma', '_validateHex',
-                '_validateBinary', '_validateOctal', '_validateScientific'],
+            numTypeFuncs = ['validateComma', 'validateHex',
+                'validateBinary', 'validateOctal', 'validateScientific'],
             parser = createValidationParser(validator, numTypeFuncs),
             values = [
                 [1, numToHex(999), 999],
@@ -341,7 +332,7 @@ describe('sjl.validator.NumberValidator`', function () {
     });
 
     describe ('`isValid`', function () {
-        var validator = new NumberValidator({
+        let validator = new NumberValidator({
                 allowFloat: true,
                 allowHex: true,
                 allowBinary: true,

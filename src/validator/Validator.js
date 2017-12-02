@@ -46,7 +46,7 @@ export class ValidationOptions {
             [Function, 'valueObscurator', defaultValueObscurator]
         ], this);
         if (options.length) {
-            assignDeep.apply(null, [this].concat(options.filter(x => isset(x))));
+            assignDeep.apply(null, [this].concat(options.filter(isset)));
         }
     }
 }
