@@ -1,7 +1,8 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
-import NumberValidator, {validateHex, validateOctal, parseValidationFuncs} from '../src/validator/NumberValidator';
+import NumberValidator, {validateHex, validateSigned, validateOctal, parseSubValidationFuncs
+} from '../src/validator/NumberValidator';
 import Validator from '../src/validator/Validator';
 import {foldl, compose, map, concat, isNumber, isArray} from 'fjl';
 import {expect, assert} from 'chai';
@@ -106,7 +107,45 @@ describe('sjl.validator.NumberValidator`', function () {
                 expect(msgs.length > 0).to.equal(true);
             });
         });
+    });
 
+    describe('#validateSigned', function () {
+        const values = [
+                [0, 99], [0, '123123.234e20'], [0, 0xff9900]
+            ],
+            failingValues = [
+                [-1, -3], [-1, -999.99], [-1, -0x99ff99], [-1, '+100'],
+            ];
+        it ('should return [-1, [...""]] when value is signed and `allowSigned` is set to ' +
+            '`false`', function () {
+            let validator = new NumberValidator({allowSigned: false});
+
+            // Test for `allowSigned` is false
+            values.forEach((value, index) => {
+                const [result, messages] = validateSigned(value[1], validator);
+                expect(result).to.equal(values[index][0]);
+                expect(messages.length).to.equal(0);
+            });
+
+            // Test for `allowSigned` is false
+            failingValues.forEach((pair, index) => {
+                const [result, messages] = validateSigned(pair[1], validator);
+                expect(result).to.equal(failingValues[index][0]);
+                expect(messages.length > 0).to.equal(true);
+            });
+        });
+        it ('should return [0, []] (unchecked) when value is signed and `allowSigned` is ' +
+            '`true`.', function () {
+            let validator = new NumberValidator({allowSigned: true});
+
+            // Test for `allowSigned` is false
+            values.concat(failingValues).forEach(pair => {
+                const [result, messages] = validateSigned(pair[1], validator);
+                expect(result).to.equal(0);
+                expect(messages.length).to.equal(0);
+            });
+
+        });
     });
 
 });

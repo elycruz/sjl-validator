@@ -14,8 +14,7 @@ export const
     validate = (value, options) => {
         let result = false,
             messages = [],
-            classOfValue = typeOf(value),
-            subResult;
+            classOfValue = typeOf(value);
 
         if (classOfValue === 'Number') {
             result = true;
@@ -26,11 +25,11 @@ export const
         else if (classOfValue === 'String') {
             // Lower case any alpha chars
             // and see if our value validates with one of the defined sub validators
-            result = parseValidationFuncs([
+            result = parseSubValidationFuncs([
                 validateComma, validateBinary, validateHex,
                 validateOctal, validateScientific, validateSigned,
                 validateFloat, validateRange
-            ], value.toLowerCase(), options);
+            ], value.toLowerCase(), messages, options);
 
             // If string didn't validate add error message
             if (!result) {
@@ -40,23 +39,23 @@ export const
         return new ValidationResult({result, messages, value});
     },
 
-    parseValidationFuncs = (functions, value, options) =>
+    parseSubValidationFuncs = (functions, value, options = {}, messages = []) =>
         unfoldr(([_result, len], ind) => {
             if (len === 0 || _result !== 0) {
                 return undefined;
             }
-            const result = functions[ind](value, options);
+            const result = functions[ind](value, options, messages);
             return [result, (result === -1 || result === 1) ? 0 : --len];
         }, [0, functions, functions.length]),
 
     validateHex = (value, options, messages = []) => {
         let retVal = 0,
-            isHexString = value && (
+            isHexLike = value && (
                 (value[1] && value[1].toLowerCase() === 'x') ||
                 (value[0] === '#')
             ),
             isValidFormat;
-        if (!isHexString) {
+        if (!isHexLike) {
             return [0, messages];
         }
         isValidFormat = options.regexForHex.test(value);
