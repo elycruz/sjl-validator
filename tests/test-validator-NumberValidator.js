@@ -1,12 +1,13 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
-import NumberValidator, {validateHex, validateSigned, validateOctal, parseSubValidationFuncs
+import NumberValidator, {validateHex, validateSigned, validateComma,
+    validateOctal, parseSubValidationFuncs
 } from '../src/validator/NumberValidator';
 import Validator from '../src/validator/Validator';
 import {foldl, compose, map, concat, isNumber, isArray} from 'fjl';
 import {expect, assert} from 'chai';
-import {log, peek} from './utils';
+import {peek} from './utils';
 
 describe('sjl.validator.NumberValidator`', function () {
 
@@ -109,7 +110,7 @@ describe('sjl.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#validateSigned', function () {
+    describe ('#validateSigned', function () {
         const values = [
                 [0, 99], [0, '123123.234e20'], [0, 0xff9900]
             ],
@@ -145,6 +146,47 @@ describe('sjl.validator.NumberValidator`', function () {
                 expect(messages.length).to.equal(0);
             });
 
+        });
+    });
+
+    describe ('#validateComma', function () {
+        const valuesWithCommas = [
+                [-1, ',1,000,000,000', 1000000000],
+                [-1, ',', ','],
+                [-1, '1,000,000', 1000000],
+                [-1, '+100,000', 100000]
+            ],
+            valuesWithCommas2 = [
+                [1, ',1,000,000,000', 1000000000],
+                [1, '1,000,000', 1000000],
+                [1, '+100,000', 100000]
+            ],
+            valuesWithoutCommas = [
+                [0, 99 + ''],
+                [0, '123123.234e20'],
+                [0, 0xff9900 + '']
+            ],
+            values = valuesWithCommas.concat(valuesWithoutCommas)
+        ;
+        it ('should return [-1, value] when value contains comma(s) and `allowComma` is `false`.', function () {
+            let validator = new NumberValidator(),
+                result;
+
+            // Test for `allowComma` is false
+            values.forEach((value, index) => {
+                result = validateComma(peek(value)[1], validator);
+                expect(result[0]).to.equal(values[index][0]);
+                // expect(result[1]).to.equal(values[index][1]);
+            });
+        });
+        it ('should return [0, []] when value contains no commas or when `allowComma` is `true`', function () {
+            // Test for `allowComma` is true
+            const validator = new NumberValidator({allowCommas: true});
+            valuesWithCommas2.forEach(function (value, index) {
+                const [result, messages] = validateComma(value[1], validator);
+                expect(result).to.equal(valuesWithCommas2[index][0]);
+                expect(messages.length).to.equal(0);
+            });
         });
     });
 
