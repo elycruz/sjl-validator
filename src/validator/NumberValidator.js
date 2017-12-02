@@ -144,31 +144,30 @@ export const
     },
 
     validateOctal = (value, options, messages = []) => {
-        let out = [0, value],
+        let out = 0,
             possibleOctal = /^0\d/.test(value),
             isValidOctalValue;
         if (possibleOctal) {
             if (options.allowOctal) {
                 isValidOctalValue = options.regexForOctal.test(value);
                 if (isValidOctalValue) {
-                    out[0] = 1;
-                    out[1] = parseInt(value, 8);
+                    out = 1;
                 }
                 else {
-                    getErrorMsgByKey('NOT_ALLOWED_OCTAL', value, options);
-                    out[0] = -1;
+                    messages.push(getErrorMsgByKey('NOT_ALLOWED_OCTAL', value, options));
+                    out = -1;
                 }
             }
             else {
-                getErrorMsgByKey('INVALID_OCTAL', value, options);
-                out[0] = -1;
+                messages.push(getErrorMsgByKey('INVALID_OCTAL', value, options));
+                out = -1;
             }
         }
-        return out;
+        return [out, messages];
     },
 
     validateScientific = (value, options, messages = []) => {
-        let out = [0, value],
+        let out = [0, messages],
             possibleScientific = /\de/.test(value),
             isValidScientificValue;
         if (possibleScientific) {
@@ -176,15 +175,14 @@ export const
                 isValidScientificValue = options.regexForScientific.test(value);
                 if (isValidScientificValue) {
                     out[0] = 1;
-                    out[1] = Number(value);
                 }
                 else {
-                    getErrorMsgByKey('INVALID_SCIENTIFIC', value, options);
+                    messages.push(getErrorMsgByKey('INVALID_SCIENTIFIC', value, options));
                     out[0] = -1;
                 }
             }
             else {
-                getErrorMsgByKey('NOT_ALLOWED_SCIENTIFIC', value, options);
+                messages.push(getErrorMsgByKey('NOT_ALLOWED_SCIENTIFIC', value, options));
                 out[0] = -1;
             }
         }
@@ -192,13 +190,14 @@ export const
     },
 
     validateRange = (value, options, messages = []) => {
-        let out = [0, value];
+        let out = [0, messages],
+            {inclusive, min, max} = options;
         if (options.checkRange) {
-            if (options.inclusive && (value < options.min || value > options.max)) {
+            if ((inclusive && (value < min || value > max)) ||
+                (!inclusive && (value <= min || value >= max))
+            ) {
                 out[0] = -1;
-            }
-            else if (!options.inclusive && (value <= options.min || value >= options.max)) {
-                out[0] = -1;
+                messages.push(getErrorMsgByKey('NOT_IN_RANGE', value, options));
             }
             else {
                 out[0] = 1;
@@ -210,57 +209,55 @@ export const
 class NumberValidator extends Validator {}
 
 // @TODO ensure types here
-// @todo use template strings and function shorthand here
 NumberValidator.defaultOptions = {
     messageTemplates: {
-        NOT_A_NUMBER: function (value, validator) {
-            return 'Value "' + value + '" is not a number (strings are allowed but must be numeric.';
-        },
-        NOT_IN_RANGE: function (value, validator) {
-            return 'The number passed in is not ' + (validator.inclusive ? 'inclusive' : '')
+        NOT_A_NUMBER: (value, validator) =>
+            'Value "' + value + '" is not a number (strings are allowed but must be numeric.',
+        
+        NOT_IN_RANGE: (value, validator) =>
+            'The number passed in is not ' + (validator.inclusive ? 'inclusive' : '')
                 + 'ly within the specified '  + ' range. ' +
-                ' Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_FLOAT: function (value, validator) {
-            return 'No floats allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_COMMA: function (value, validator) {
-            return 'No commas allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_SIGNED: function (value, validator) {
-            return 'No signed numbers allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_HEX: function (value, validator) {
-            return 'No hexadecimal numbers allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_OCTAL: function (value, validator) {
-            return 'No octal strings allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_BINARY: function (value, validator) {
-            return 'No binary strings allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        NOT_ALLOWED_SCIENTIFIC: function (value, validator) {
-            return 'No scientific number strings allowed.  ' +
-                'Value received: "' + value + '".';
-        },
-        INVALID_HEX: function (value, validator) {
-            return 'Invalid hexadecimal value: "' + value + '".';
-        },
-        INVALID_OCTAL: function (value, validator) {
-            return 'Invalid octal value: "' + value + '".';
-        },
-        INVALID_BINARY: function (value, validator) {
-            return 'Invalid binary value: "' + value + '".';
-        },
-        INVALID_SCIENTIFIC: function (value, validator) {
-            return 'Invalid scientific value: "' + value + '".';
-        }
+                ' Value received: "' + value + '".',
+        
+        NOT_ALLOWED_FLOAT: (value, validator) =>
+            'No floats allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        NOT_ALLOWED_COMMA: (value, validator) =>
+            'No commas allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        NOT_ALLOWED_SIGNED: (value, validator) =>
+            'No signed numbers allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        NOT_ALLOWED_HEX: (value, validator) =>
+            'No hexadecimal numbers allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        NOT_ALLOWED_OCTAL: (value, validator) =>
+            'No octal strings allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        NOT_ALLOWED_BINARY: (value, validator) =>
+            'No binary strings allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        NOT_ALLOWED_SCIENTIFIC: (value, validator) =>
+            'No scientific number strings allowed.  ' +
+                'Value received: "' + value + '".',
+        
+        INVALID_HEX: (value, validator) =>
+            'Invalid hexadecimal value: "' + value + '".',
+        
+        INVALID_OCTAL: (value, validator) =>
+            'Invalid octal value: "' + value + '".',
+        
+        INVALID_BINARY: (value, validator) =>
+            'Invalid binary value: "' + value + '".',
+        
+        INVALID_SCIENTIFIC: (value, validator) =>
+            'Invalid scientific value: "' + value + '".'
     },
     regexForHex: /^(?:(?:0x)|(?:\#))[\da-f]+$/i,
     regexForOctal:  /^0\d+$/,

@@ -74,7 +74,7 @@ describe('sjl.validator.NumberValidator`', function () {
         });
 
         it ('should return `[0, []]` when value is not hex like (' +
-            '   doesn\'t contain an "x" at index `1` or doesn\'t contain a "#" at index `1`', function () {
+            '   doesn\'t contain an "x" (case-insensitive) at index `1` or doesn\'t contain a "#" at index `1`', function () {
             const validator = new NumberValidator({allowHex: true}),
                 results = fib(10000)
                     .map((n, ind) => ind % 2 === 0 ? n + '' : n)
@@ -94,9 +94,11 @@ describe('sjl.validator.NumberValidator`', function () {
                 validator = new NumberValidator({allowHex: true}),
                 results = fib(10000)
                     .map(numToHex)
-                    .map((n, ind) => ind % 2 === 0 ? n + String.fromCharCode(randomNonHexCharChode()) : n)
+                    .map((n, ind) => (n + String.fromCharCode(randomNonHexCharChode()))[
+                        ind % 2 === 0 ? 'toUpperCase' : 'toLowerCase']()
+                    )
                     // .map(peek)
-                    .map(n => validateHex(n, validator));
+                    .map(n => validateHex(n, validator.options));
 
             // Expect all `n` to not be validatable (`0`) a hex value
             results.forEach(([n, msgs]) => {
