@@ -192,39 +192,45 @@ describe('sjl.validator.NumberValidator`', function () {
     });
 
     describe ('#validateFloat', function () {
-        it ('should return [-1, value] when value contains a decimal point and `allowFloat` is `false`.', function () {
-            let validator = new NumberValidator({allowFloat: false}),
-                valuesWithFloats = [
-                    [-1, ',1,000,000,000.00'],
-                    [-1, '.', '.'],
-                    [-1, '1,000,000.00'],
-                    [-1, '+100,000.00']
-                ],
-                valuesWithFloats2 = [
-                    [0, ',1,000,000,000.00'],
-                    [0, '.', '.'],
-                    [0, '1,000,000.00'],
-                    [0, '+100,000.00']
-                ]
-                //valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
-                //values = valuesWithFloats.concat(valuesWithoutFloats),
-                ;
+        const valuesWithFloats = [
+                [-1, ',1,000,000,000.00'],
+                [-1, '.', '.'],
+                [-1, '1,000,000.00'],
+                [-1, '+100,000.00']
+            ],
+            valuesWithFloats2 = [
+                [0, ',1,000,000,000.00'],
+                [0, '.', '.'],
+                [0, '1,000,000.00'],
+                [0, '+100,000.00']
+            ]
+        //valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
+        //values = valuesWithFloats.concat(valuesWithoutFloats),
+        ;
+        it ('should return [-1, [...""]] when value contains a decimal point and `allowFloat` is `false`.', function () {
+            const validator = new NumberValidator({allowFloat: false});
 
             // Test for `allowFloat` is false
             valuesWithFloats.forEach((value, index) => {
                 const result = validateFloat(value[1], validator);
                 expect(result[0]).to.equal(valuesWithFloats[index][0]);
+                expect(result[1].length > 0).to.equal(true);
                 // expect(result[1]).to.equal(valuesWithFloats[index][1]);
             });
-
+        });
+        it ('should return [0, []] when value contains a decimal and `allowFloat` is set to `true`.', function () {
+            const validator = new NumberValidator();
             //// Test for `allowFloat` is true
             validator.allowFloat = true;
             valuesWithFloats2.forEach((value, index) => {
                 const result = validateFloat(value[1], validator);
                 expect(result[0]).to.equal(valuesWithFloats2[index][0]);
+                expect(result[1].length).to.equal(0);
                 // expect(result[1]).to.equal(valuesWithFloats2[index][1]);
             });
         });
     });
+
+
 
 });
