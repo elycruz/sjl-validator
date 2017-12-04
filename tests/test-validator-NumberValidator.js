@@ -2,6 +2,7 @@
  * Created by edelacruz on 7/28/2014.
  */
 import NumberValidator, {validateHex, validateSigned, validateComma,
+    validateFloat, validateBinary,
     validateOctal, parseSubValidationFuncs
 } from '../src/validator/NumberValidator';
 import Validator from '../src/validator/Validator';
@@ -157,9 +158,9 @@ describe('sjl.validator.NumberValidator`', function () {
                 [-1, '+100,000', 100000]
             ],
             valuesWithCommas2 = [
-                [1, ',1,000,000,000', 1000000000],
-                [1, '1,000,000', 1000000],
-                [1, '+100,000', 100000]
+                [0, ',1,000,000,000', 1000000000],
+                [0, '1,000,000', 1000000],
+                [0, '+100,000', 100000]
             ],
             valuesWithoutCommas = [
                 [0, 99 + ''],
@@ -186,6 +187,42 @@ describe('sjl.validator.NumberValidator`', function () {
                 const [result, messages] = validateComma(value[1], validator);
                 expect(result).to.equal(valuesWithCommas2[index][0]);
                 expect(messages.length).to.equal(0);
+            });
+        });
+    });
+
+    describe ('#validateFloat', function () {
+        it ('should return [-1, value] when value contains a decimal point and `allowFloat` is `false`.', function () {
+            let validator = new NumberValidator({allowFloat: false}),
+                valuesWithFloats = [
+                    [-1, ',1,000,000,000.00'],
+                    [-1, '.', '.'],
+                    [-1, '1,000,000.00'],
+                    [-1, '+100,000.00']
+                ],
+                valuesWithFloats2 = [
+                    [0, ',1,000,000,000.00'],
+                    [0, '.', '.'],
+                    [0, '1,000,000.00'],
+                    [0, '+100,000.00']
+                ]
+                //valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
+                //values = valuesWithFloats.concat(valuesWithoutFloats),
+                ;
+
+            // Test for `allowFloat` is false
+            valuesWithFloats.forEach((value, index) => {
+                const result = validateFloat(value[1], validator);
+                expect(result[0]).to.equal(valuesWithFloats[index][0]);
+                // expect(result[1]).to.equal(valuesWithFloats[index][1]);
+            });
+
+            //// Test for `allowFloat` is true
+            validator.allowFloat = true;
+            valuesWithFloats2.forEach((value, index) => {
+                const result = validateFloat(value[1], validator);
+                expect(result[0]).to.equal(valuesWithFloats2[index][0]);
+                // expect(result[1]).to.equal(valuesWithFloats2[index][1]);
             });
         });
     });
