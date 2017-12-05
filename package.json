@@ -20,7 +20,8 @@
   "dependencies": {
     "fjl": "^0.17.10",
     "fjl-error-throwing": "^0.7.5",
-    "fjl-mutable": "^0.15.0"
+    "fjl-mutable": "^0.15.0",
+    "validator": "^9.1.2"
   },
   "devDependencies": {
     "babel-preset-env": "^1.6.1",

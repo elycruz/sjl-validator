@@ -99,4 +99,6 @@ export default class Validator {
 
 }
 
-Validator.messageTemplates = {};
+Validator.defaultOptions = {
+    messageTemplates: {}
+};

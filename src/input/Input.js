@@ -8,40 +8,10 @@ import {defineEnumProps$} from 'fjl-mutable';
 import {assign, compose, concat, isString, isUndefined} from 'fjl';
 import {ValidationResult} from "../validator/Validator";
 
-class Input {
-    constructor (options) {
-        defineEnumProps$([
-            [String,    'name', ''],
-            [Boolean,   'required', true],
-            [Array,     'filters', []],
-            [Array,     'validators', []],
-            [Boolean,   'allowEmpty', false],
-            [Boolean,   'continueIfEmpty', false],
-            [Boolean,   'breakOnFailure', false],
+export const
 
-            // Protect from adding programmatic validators,
-            // from within `isValid`, more than once
-            [Array, 'validationHasRun', false], // @todo evaluate the necessity
-                                                // of this functionality
-        ], this);
-
-        if (isString(options)) {
-            this.name = options;
-        }
-        else if (options) {
-            assign(this, options);
-        }
-    }
-
-    isValid (value) {
-        return isValid(value, input);
-    }
-}
-
-const
-
-    isValid = (value, input) => {
-        const {validators, filters} = input,
+    validate = (value, input) => {
+        const {validators, filters, breakOnFailure} = input,
             validationResult = runValidators(validators, value, breakOnFailure),
             {result} = validationResult;
 
@@ -53,13 +23,11 @@ const
         return new ValidationResult(validationResult);
     },
 
-    validate = (value, input) => isValid(input),
-
     runValidators = (validators, value, breakOnFailure) => {
         const limit = validators.length,
             results = [];
         let result = true,
-            i = 0;
+            i;
 
         for (i = 0; i < limit; i += 1) {
             const [isValid, messages] = validators[i](value);
@@ -83,6 +51,37 @@ const
     },
 
     runFilters = (filters, value) => apply(compose, filters)(value)
-
-    // hasFallbackValue = () => !isUndefined(input.fallbackValue)
 ;
+
+export class Input {
+    constructor (options) {
+        defineEnumProps$([
+            [String,    'name', ''],
+            [Boolean,   'required', true],
+            [Array,     'filters', []],
+            [Array,     'validators', []],
+            [Boolean,   'allowEmpty', false],
+            [Boolean,   'continueIfEmpty', false],
+            [Boolean,   'breakOnFailure', false],
+
+            // Protect from adding programmatic validators,
+            // from within `isValid`, more than once
+            [Array, 'validationHasRun', false], // @todo evaluate the necessity
+                                                // of this functionality
+        ], this);
+
+        this.fallbackValue = undefined;
+
+        if (isString(options)) {
+            this.name = options;
+        }
+        else if (options) {
+            assign(this, options);
+        }
+    }
+
+    isValid (value) {
+        return validate(value, input);
+    }
+
+}
