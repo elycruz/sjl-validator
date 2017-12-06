@@ -9,11 +9,11 @@ import {assign} from 'fjl';
 // Valid html tag and attribute names and
 // @see https://www.w3.org/TR/xml/#sec-terminology
 // @see https://www.w3.org/TR/xml/#NT-Name
-const
+export const
 
     contextName = 'StripTagsFilter',
 
-    nameStartCharPartial = [
+    nameStartCharPartial = (() => [
         '\\:_a-z',
         '\\xC0-\\xD6',
         '\\xD8-\\xF6',
@@ -27,13 +27,13 @@ const
         '\\xF900-\\xFDCF',
         '\\xFDF0-\\xFFFD',
         '\\x10000-\\xEFFFF'
-    ].join(''),
+    ].join(''))(),
 
-    nameCharPartial = nameStartCharPartial.concat([
+    nameCharPartial = nameStartCharPartial + [
         '\\-\\.\\d\\xB7',
         '\\x0300-\\x036F',
         '\\x203F-\\x2040'
-    ]).join(''),
+    ].join(''),
 
     namePartial = `[${nameStartCharPartial}][${nameCharPartial}]*`,
 
@@ -53,8 +53,7 @@ const
 
     stripComments = value => value.replace(/<!--[\t\n\r]*.+[\t\n\r]*-->/gm, ''),
 
-    createTagRegexPartial = tag =>
-        `(<(${tag})(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)` +
+    createTagRegexPartial = tag => `(<${tag}(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)` +
         `.*(<\/${mlnSpacePartial}\\2${mlnSpacePartial}>)`,
 
     stripTags = (value, tags) => {
@@ -62,7 +61,7 @@ const
         errorIfNotType$(String, localContextName, 'value', value);
         errorIfNotType$(Array, localContextName, 'tags', tags);
         if (!validateNames(tags)) {
-            throw new Error(`Type Error: ${localContextName} expects tag names passed in ` +
+            throw new Error(`Type Format Error: ${localContextName} expects tag names passed in ` +
                 `to conform to html tag/element name format.  Please review passed in tags`);
         }
         return tags.reduce((out, tag) => {
@@ -71,10 +70,13 @@ const
         }, value);
     },
 
-
     stripAttribs = (value, attribs) => {
-        if (!validateAttribs(attribs)) {
-            throw new Error ('Attribs mismatch');
+        const localContextName = contextName + '.stripAttribs';
+        errorIfNotType$(String, localContextName, 'value', value);
+        errorIfNotType$(Array, localContextName, 'attribs', attribs);
+        if (!validateNames(attribs)) {
+            throw new Error(`Type Format Error: ${localContextName} expects attribute names passed in ` +
+                `to conform to html tag/element attribute name format.  Passed in attribute names: ${attribs.join(', ')}.`);
         }
         let out = value;
         attribs.forEach(function (attrib) {
