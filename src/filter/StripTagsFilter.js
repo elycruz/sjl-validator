@@ -5,16 +5,21 @@ import {errorIfNotType$} from 'fjl-error-throwing';
 import {defineEnumProps$} from 'fjl-mutable';
 import {assign} from 'fjl';
 
-// Xml names and tokens
-// Valid html tag and attribute names and
-// @see https://www.w3.org/TR/xml/#sec-terminology
-// @see https://www.w3.org/TR/xml/#NT-Name
-export const
+// @todo hard code the generated unicode values below
+const stripEscapeSeqHead = x => x.substr(2),
 
-    contextName = 'StripTagsFilter',
+    wrapUnicodeClass = x => `\\u{${x}}`,
 
-    nameStartCharPartial = (() => [
-        '\\:_a-z',
+    hexRangeToUnicodeRange = rangeStr => {
+        const [from, to] = rangeStr.split('-'),
+            fromNum = stripEscapeSeqHead(from),
+            toNum = stripEscapeSeqHead(to),
+            fromStrRep = wrapUnicodeClass(fromNum),
+            toStrRep = wrapUnicodeClass(toNum);
+        return `${fromStrRep}-${toStrRep}`;
+    },
+
+    nameStartCharHexRanges = [
         '\\xC0-\\xD6',
         '\\xD8-\\xF6',
         '\\xF8-\\x2FF',
@@ -27,13 +32,30 @@ export const
         '\\xF900-\\xFDCF',
         '\\xFDF0-\\xFFFD',
         '\\x10000-\\xEFFFF'
-    ].join(''))(),
+    ]
+        .map(hexRangeToUnicodeRange), // @todo Hard code generated values
 
-    nameCharPartial = nameStartCharPartial + [
-        '\\-\\.\\d\\xB7',
+    nameCharHexRanges = [
         '\\x0300-\\x036F',
         '\\x203F-\\x2040'
-    ].join(''),
+    ]
+        .map(hexRangeToUnicodeRange) // @todo Hard code generated values
+;
+
+// Xml names and tokens
+// Valid html tag and attribute names and
+// @see https://www.w3.org/TR/xml/#sec-terminology
+// @see https://www.w3.org/TR/xml/#NT-Name
+export const
+
+    contextName = 'StripTagsFilter',
+
+    nameStartCharPartial = nameStartCharHexRanges
+        .concat(['_a-zA-Z']).join(''),
+
+    nameCharPartial = nameStartCharPartial +
+        ['\\-\\.\\d' + wrapUnicodeClass(stripEscapeSeqHead('\\xB7'))]
+            .concat( nameCharHexRanges).join(''),
 
     namePartial = `[${nameStartCharPartial}][${nameCharPartial}]*`,
 
@@ -45,13 +67,13 @@ export const
 
     attrPartial = `${namePartial + eqPartial + attrValuePartial}`,
 
-    tagNameRegex = new RegExp(`^${namePartial}$`, 'i'),
+    tagNameRegex = new RegExp(`^${namePartial}$`, 'u'),
 
     validateName = tag => tagNameRegex.test(tag),
 
     validateNames = tags => tags.every(validateName),
 
-    stripComments = value => value.replace(/<!--[\t\n\r]*.+[\t\n\r]*-->/gm, ''),
+    stripComments = value => value.replace(/<!--[\t\n\r\s]*.+[\t\n\r\s]*-->/gm, ''),
 
     createTagRegexPartial = tag => `(<${tag}(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)` +
         `.*(<\/${mlnSpacePartial}\\2${mlnSpacePartial}>)`,

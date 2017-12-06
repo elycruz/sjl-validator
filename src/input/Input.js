@@ -70,8 +70,6 @@ export class Input {
                                                 // of this functionality
         ], this);
 
-        this.fallbackValue = undefined;
-
         if (isString(options)) {
             this.name = options;
         }

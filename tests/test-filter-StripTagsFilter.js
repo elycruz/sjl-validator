@@ -3,14 +3,14 @@
  */
 import StripTagsFilter, {createTagRegexPartial} from '../src/filter/StripTagsFilter';
 import {expect, assert} from 'chai';
-import {typeOf} from 'fjl';
+import {typeOf, isString} from 'fjl';
 
 
 describe('sjl.filter.StripTagsFilter', function () {
 
     describe ('#createTagRegexPartial', function () {
-        it ('should return a regular expression', function () {
-            expect(createTagRegexPartial()).to.be.instanceOf(RegExp);
+        it ('should return a string', function () {
+            expect(isString(createTagRegexPartial())).to.equal(true);
         });
     });
 
