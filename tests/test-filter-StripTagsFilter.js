@@ -12,6 +12,9 @@ describe('sjl.filter.StripTagsFilter', function () {
         it ('should return a string', function () {
             expect(isString(createTagRegexPartial())).to.equal(true);
         });
+        it ('should be return a well constructed regex partial (string)', function () {
+            expect(new RegExp(createTagRegexPartial('p'), 'gum')).to.be.instanceOf(RegExp);
+        });
     });
 
     //

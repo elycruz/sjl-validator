@@ -51,7 +51,7 @@ export const
     contextName = 'StripTagsFilter',
 
     nameStartCharPartial = nameStartCharHexRanges
-        .concat(['_a-zA-Z']).join(''),
+        .concat(['\\u{3A}_a-zA-Z']).join(''), // `"\\u{3A}" === String.fromCharCode(0x3A)` same as ":"
 
     nameCharPartial = nameStartCharPartial +
         ['\\-\\.\\d' + wrapUnicodeClass(stripEscapeSeqHead('\\xB7'))]
@@ -63,7 +63,7 @@ export const
 
     mlnSpacePartial = '[\\n\\r\\t\\s]*', // our own
 
-    attrValuePartial = '\\"[^\\"]*\\"',
+    attrValuePartial = '"[^"]*"',
 
     attrPartial = `${namePartial + eqPartial + attrValuePartial}`,
 
@@ -75,8 +75,7 @@ export const
 
     stripComments = value => value.replace(/<!--[\t\n\r\s]*.+[\t\n\r\s]*-->/gm, ''),
 
-    createTagRegexPartial = tag => `(<${tag}(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)` +
-        `.*(<\/${mlnSpacePartial}\\2${mlnSpacePartial}>)`,
+    createTagRegexPartial = tag => `(<\\/?(${tag})(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)`,
 
     stripTags = (value, tags) => {
         const localContextName = contextName + '.stripTags';
@@ -87,7 +86,7 @@ export const
                 `to conform to html tag/element name format.  Please review passed in tags`);
         }
         return tags.reduce((out, tag) => {
-            let regex = new RegExp(createTagRegexPartial(tag), 'gim');
+            let regex = new RegExp(createTagRegexPartial(tag), 'gum');
             return out.replace(regex, '');
         }, value);
     },
@@ -112,13 +111,10 @@ export const
     },
 
     filter = (value, tags, attribs, removeComments) => {
-        let out = stripTags(removeComments ? stripComments(value) : value, tags, attribs);
-        return sjl.isEmptyOrNotOfType(attribs, Array) ? out :
-            stripAttribs(out, attribs);
+        return stripTags(removeComments ? stripComments(value) : value, tags, attribs);
     }
 
 ;
-
 
 export class StripTagsFilter {
     constructor (options) {
