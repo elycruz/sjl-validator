@@ -3,8 +3,9 @@
  */
 import StripTagsFilter, {createTagRegexPartial} from '../src/filter/StripTagsFilter';
 import {expect, assert} from 'chai';
-import {typeOf, isString} from 'fjl';
-
+import {typeOf, isString, subsequences} from 'fjl';
+import {range} from 'fjl-range';
+import {peek, log, genRanStr} from './utils';
 
 describe('sjl.filter.StripTagsFilter', function () {
 
@@ -14,6 +15,23 @@ describe('sjl.filter.StripTagsFilter', function () {
         });
         it ('should be return a well constructed regex partial (string)', function () {
             expect(new RegExp(createTagRegexPartial('p'), 'gum')).to.be.instanceOf(RegExp);
+        });
+        it ('should return a regex that can validate html tag formats', function () {
+            const names = subsequences('abc-_:'.split('')); // simple tag format for now
+            expect(
+                names.every(tag => {
+                    const tagName = tag.join(''),
+                        r = new RegExp(createTagRegexPartial(tagName), 'gum'),
+                        openTag = `<${tagName}>`,
+                        closeTag = `</${tagName}>`,
+                        randomContent = genRanStr(0, 100)
+                    ;
+                    return !tagName.length ? true :
+                        subsequences([openTag, randomContent, closeTag])
+                            .filter(x => x !== randomContent && !!x)
+                            .every(xs => r.test(peek(xs).join('')));
+                })
+            ).to.equal(true);
         });
     });
 

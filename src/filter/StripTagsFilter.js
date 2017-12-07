@@ -51,15 +51,15 @@ export const
     contextName = 'StripTagsFilter',
 
     nameStartCharPartial = nameStartCharHexRanges
-        .concat(['\\u{3A}_a-zA-Z']).join(''), // `"\\u{3A}" === String.fromCharCode(0x3A)` same as ":"
+        .concat([':_a-zA-Z']).join(''), // `"\\u{3A}" === String.fromCharCode(0x3A)` same as ":"
 
     nameCharPartial = nameStartCharPartial +
-        ['\\-\\.\\d' + wrapUnicodeClass(stripEscapeSeqHead('\\xB7'))]
+        ['\\-\\.0-9' + wrapUnicodeClass(stripEscapeSeqHead('\\xB7'))]
             .concat( nameCharHexRanges).join(''),
 
     namePartial = `[${nameStartCharPartial}][${nameCharPartial}]*`,
 
-    eqPartial = '\\s?\\=\\s?',
+    eqPartial = '\\s?=\\s?',
 
     mlnSpacePartial = '[\\n\\r\\t\\s]*', // our own
 
@@ -75,7 +75,7 @@ export const
 
     stripComments = value => value.replace(/<!--[\t\n\r\s]*.+[\t\n\r\s]*-->/gm, ''),
 
-    createTagRegexPartial = tag => `(<\\/?(${tag})(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)`,
+    createTagRegexPartial = tag => `(<\\/?(${tag})(?:${mlnSpacePartial + attrPartial})*${mlnSpacePartial}>)*`,
 
     stripTags = (value, tags) => {
         const localContextName = contextName + '.stripTags';

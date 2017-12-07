@@ -27,6 +27,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
+    "fjl-range": "^1.0.3",
     "mocha": "^4.0.1"
   }
 }
