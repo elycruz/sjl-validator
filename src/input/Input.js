@@ -14,25 +14,28 @@ export const
         const {validators, filters, breakOnFailure} = input,
             validationResult = runValidators(validators, value, breakOnFailure),
             {result} = validationResult;
-
         if (result) {
             validationResult.filteredValue = runFilters(filters, value);
             validationResult.value = value;
         }
-
         return new ValidationResult(validationResult);
     },
 
-    runValidators = (validators, value, breakOnFailure) => {
+    runValidators = (validators, value, options) => {
         const limit = validators.length,
+            {breakOnFailure} = options,
             results = [];
-        let result = true,
-            i;
+        let i = 0,
+            result = true;
 
-        for (i = 0; i < limit; i += 1) {
-            const [isValid, messages] = validators[i](value);
-            results.push([result, messages]);
-            if (!isValid) {
+        // Run validators
+        for (; i < limit; i++) {
+            const validator = validators[i],
+                vResult = validator === 'object' ?
+                    validator.validate(value) : validator(value, options),
+            {result: interimResult, messages: msgs} = vResult;
+            results.push(vResult);
+            if (!interimResult) {
                 result = false;
                 if (breakOnFailure) {
                     break;
@@ -41,16 +44,22 @@ export const
         }
 
         // Return result
-        return {
+        return new ValidationResult({
             result,
             value,
 
             // if messages pull them out and concat into one array or empty array
-            messages: !result ? concat(results.map(([_, msgs]) => msgs)) : []
-        };
+            messages: !result ? concat(results.map(({messages}) => messages)) : []
+        });
     },
 
-    runFilters = (filters, value) => apply(compose, filters)(value)
+    runFilters = (filters, value) => filters.length ?
+        apply(compose, filters)(value) : value,
+
+    processInput = (value, input) => {
+
+    }
+
 ;
 
 export class Input {
@@ -60,16 +69,13 @@ export class Input {
             [Boolean,   'required', true],
             [Array,     'filters', []],
             [Array,     'validators', []],
-            [Boolean,   'allowEmpty', false],
-            [Boolean,   'continueIfEmpty', false],
             [Boolean,   'breakOnFailure', false],
 
             // Protect from adding programmatic validators,
             // from within `isValid`, more than once
-            [Array, 'validationHasRun', false], // @todo evaluate the necessity
+            [Boolean, 'validationHasRun', false], // @todo evaluate the necessity
                                                 // of this functionality
         ], this);
-
         if (isString(options)) {
             this.name = options;
         }
@@ -78,8 +84,21 @@ export class Input {
         }
     }
 
+    validate (value) {
+        return validate(value, this);
+    }
+
     isValid (value) {
-        return validate(value, input);
+        return validate(value, this).result;
+    }
+
+    filter (value) {
+        // If valid return filtered else return current
+        return this.validate(value).result ?
+            runFilters(this.filters, value) :
+            value;
     }
 
 }
+
+export default Input;

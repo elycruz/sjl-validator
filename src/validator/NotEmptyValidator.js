@@ -12,7 +12,9 @@ export const
                 'EMPTY_NOT_ALLOWED', value, options
             )] : [];
         return new ValidationResult({result, messages, value});
-    }
+    },
+
+    notEmptyValidator = (options, value) => validate(value, options)
 ;
 
 export default class NotEmptyValidator extends Validator {
