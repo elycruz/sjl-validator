@@ -4,16 +4,16 @@
 import StripTagsFilter, {createTagRegexPartial} from '../src/filter/StripTagsFilter';
 import {expect, assert} from 'chai';
 import {typeOf, isString, subsequences} from 'fjl';
-import {range} from 'fjl-range';
-import {peek, log, genRanStr} from './utils';
+import {peek, genRanStr} from './utils';
 
 describe('sjl.filter.StripTagsFilter', function () {
 
     describe ('#createTagRegexPartial', function () {
-        it ('should return a string', function () {
+        it ('should return a string of length greater than `0`', function () {
             expect(isString(createTagRegexPartial())).to.equal(true);
+            expect(createTagRegexPartial().length > 0).to.equal(true);
         });
-        it ('should be return a well constructed regex partial (string)', function () {
+        it ('should return a well constructed regex partial (string) that can be passed to `RegExp` constructor', function () {
             expect(new RegExp(createTagRegexPartial('p'), 'gum')).to.be.instanceOf(RegExp);
         });
         it ('should return a regex that can validate html tag formats', function () {
@@ -35,7 +35,6 @@ describe('sjl.filter.StripTagsFilter', function () {
         });
     });
 
-    //
     // describe('filter.StripTagsFilter.filter', function () {
     //         StripTagsFilter.filter(
     //             '<html lang="eng" lang="chinese" mambo="no.3">' +
