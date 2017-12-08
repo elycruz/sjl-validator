@@ -28,8 +28,8 @@ describe('sjl.filter.StripTagsFilter', function () {
                     ;
                     return !tagName.length ? true :
                         subsequences([openTag, randomContent, closeTag])
-                            .filter(x => x !== randomContent && !!x)
-                            .every(xs => r.test(peek(xs).join('')));
+                            .filter(x => x.length && !(x.length === 1 && x[0] === randomContent))
+                            .every(xs => r.test(xs.join('')));
                 })
             ).to.equal(true);
         });

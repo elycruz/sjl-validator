@@ -11,26 +11,32 @@ import {ValidationResult} from "../validator/Validator";
 export const
 
     validate = (value, input) => {
-        const {validators, filters, breakOnFailure} = input,
-            validationResult = runValidators(validators, value, breakOnFailure),
+        const
+            {validators, filters, breakOnFailure} = input,
+            validationResult = validators && validators.length ?
+                runValidators(validators, value, breakOnFailure) : {result: false},
             {result} = validationResult;
-        if (result) {
+
+        validationResult.value = value;
+        if (result && filters && filters.length) {
             validationResult.filteredValue = runFilters(filters, value);
-            validationResult.value = value;
         }
         return new ValidationResult(validationResult);
     },
 
     runValidators = (validators, value, options) => {
-        const limit = validators.length,
+        const
+            limit = validators.length,
             {breakOnFailure} = options,
             results = [];
-        let i = 0,
+        let
+            i = 0,
             result = true;
 
         // Run validators
         for (; i < limit; i++) {
-            const validator = validators[i],
+            const
+                validator = validators[i],
                 vResult = validator === 'object' ?
                     validator.validate(value) : validator(value, options),
             {result: interimResult, messages: msgs} = vResult;
@@ -54,11 +60,7 @@ export const
     },
 
     runFilters = (filters, value) => filters.length ?
-        apply(compose, filters)(value) : value,
-
-    processInput = (value, input) => {
-
-    }
+        apply(compose, filters)(value) : value
 
 ;
 
@@ -90,13 +92,6 @@ export class Input {
 
     isValid (value) {
         return validate(value, this).result;
-    }
-
-    filter (value) {
-        // If valid return filtered else return current
-        return this.validate(value).result ?
-            runFilters(this.filters, value) :
-            value;
     }
 
 }

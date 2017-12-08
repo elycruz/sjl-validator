@@ -5,7 +5,7 @@ import {typeOf, keys, isType, flip} from 'fjl';
 import {expect, assert} from 'chai';
 import NotEmptyValidator from '../src/validator/NotEmptyValidator'
 import RegexValidator from '../src/validator/RegexValidator'
-import Input from '../src/input/Input';
+import Input, {validate} from '../src/input/Input';
 
 describe ('sjl.input.Input', function () {
 
@@ -32,7 +32,7 @@ describe ('sjl.input.Input', function () {
 
     describe ('#Interface', function () {
         let input = new Input();
-        ['isValid', 'validate', 'filter'].forEach(function (method) {
+        ['isValid', 'validate'].forEach(function (method) {
             it('should have a `' + method + '` method.', function () {
                 expect(input[method]).to.be.instanceof(Function);
             });
@@ -42,15 +42,11 @@ describe ('sjl.input.Input', function () {
     describe ('#Properties.', function () {
         let input = new Input();
         [
-            ['breakOnFailure', Boolean],
-            ['filters', Array],
-            ['validators', Array],
             ['name', String],
             ['required', Boolean],
-            ['value', 'Undefined'],
-            ['filteredValue', 'Undefined'],
-            ['fallbackValue', 'Undefined'],
-            ['validationHasRun', Boolean]
+            ['breakOnFailure', Boolean],
+            ['filters', Array],
+            ['validators', Array]
         ].forEach(function (args) {
             it('should have an `' + args[0] + '` property.', function () {
                 let isValidProp = isType(args[1], input[args[0]]);
@@ -58,15 +54,14 @@ describe ('sjl.input.Input', function () {
             });
         });
 
-        /*describe ('#messages', function () {
-            let input = new Input();
-            it ('should be of type `Array`.', function () {
-                expect(input.messages).to.be.instanceof(Array);
-            });
-            it ('should be the messages array from the `Input`\'s validatorChain.', function () {
-                expect(input.messages).to.equal(input.validatorChain.messages);
-            });
-        });*/
+    });
+
+    describe ('#validate', function () {
+        it ('should return a validation result', function () {
+            const rslt = validate(0, {});
+            ['result', 'value', 'messsages'].forEach(key => expect(rslt.hasOwnProperty(key)));
+        });
+
     });
 
     /*describe ('#isValid, #validate', function () {
