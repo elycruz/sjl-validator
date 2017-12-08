@@ -2,7 +2,7 @@
  * Created by edelacruz on 7/28/2014.
  */
 import NumberValidator from '../src/validator/NumberValidator';
-import Validator from '../src/validator/Validator';
+import Validator from '../src/validator/ValidationOptions';
 import {expect, assert} from 'chai';
 
 describe('sjl.validator.NumberValidator`', function () {

@@ -2,7 +2,7 @@
  * Created by elyde on 1/15/2016.
  */
 import DigitValidator from '../src/validator/DigitValidator';
-import Validator from '../src/validator/Validator';
+import Validator from '../src/validator/ValidationOptions';
 import {expect, assert} from 'chai';
 import {typeOf} from 'fjl';
 

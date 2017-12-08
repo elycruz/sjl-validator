@@ -1,7 +1,7 @@
 /**
  * Created by Ely on 1/21/2015.
  */
-import Validator, {ValidationResult, getErrorMsgByKey, ValidationOptions} from "./Validator";
+import Validator, {ValidationResult, getErrorMsgByKey, ValidationOptions} from "./ValidationOptions";
 import {typeOf, isString, apply, concat, assign, curry} from 'fjl';
 import {defineEnumProps$} from 'fjl-mutable';
 

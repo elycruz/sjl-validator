@@ -2,7 +2,7 @@
  * Created by elyde on 1/15/2016.
  */
 import NotEmptyValidator from '../src/validator/NotEmptyValidator';
-import Validator from '../src/validator/Validator';
+import Validator from '../src/validator/ValidationOptions';
 import {expect, assert} from 'chai';
 
 describe('sjl.validator.NotEmptyValidator', function () {

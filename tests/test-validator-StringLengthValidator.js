@@ -1,5 +1,5 @@
 import StringLengthValidator from '../src/validator/StringLengthValidator';
-import Validator from '../src/validator/Validator';
+import Validator from '../src/validator/ValidationOptions';
 import {typeOf, repeat} from 'fjl';
 import {expect} from 'chai';
 

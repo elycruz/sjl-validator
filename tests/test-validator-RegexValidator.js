@@ -2,7 +2,7 @@
  * Created by edelacruz on 7/28/2014.
  */
 import RegexValidator from '../src/validator/DigitValidator';
-import Validator from '../src/validator/Validator';
+import Validator from '../src/validator/ValidationOptions';
 import {expect, assert} from 'chai';
 import {typeOf} from 'fjl';
 

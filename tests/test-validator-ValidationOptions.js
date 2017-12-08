@@ -3,10 +3,11 @@
  */
 import {typeOf, keys} from 'fjl';
 import {expect, assert} from 'chai';
+import {peek} from './utils';
 
-import Validator from '../src/validator/Validator';
+import ValidationOptions from '../src/validator/ValidationOptions';
 
-describe('sjl.validator.Validator', function () {
+describe('sjl.validator.ValidationOptions', function () {
 
     describe('#Construction', function () {
         it('should merge incoming options to `self` on construction', function () {
@@ -14,8 +15,7 @@ describe('sjl.validator.Validator', function () {
                     A: 'some message',
                     B: value => `some message with value in it.  Value: ${value}`
                 },
-                messages = ['a', 'b', 'b'],
-                v = new Validator({messageTemplates, messages});
+                v = new ValidationOptions({messageTemplates});
 
             // Ensure passed in allowed type is merged in
             keys(messageTemplates).forEach(key => {
@@ -24,57 +24,35 @@ describe('sjl.validator.Validator', function () {
 
             // Ensure not allowed type is blocked
             // messages must be of type `Array` so should throw error
-            assert.throws(() => new Validator({messages: ''}), Error);
-
-            // Ensure one more positive case
-            const v2 = new Validator({messages});
-            v2.messages.forEach((m, ind) => {
-                expect(m).to.equal(messages[ind]);
-            });
+            assert.throws(() => new ValidationOptions({messageTemplates: 99}), Error);
         });
 
         const expectedPropertyAndTypes = {
-                messages: 'Array',
                 messagesMaxLength: 'Number',
-                valueObscured: 'Boolean'
-                // value: 'Null'
-            },
-            expectedMethodNames = [
-                'addErrorByKey',
-                'clearMessages',
-                'validate',
-                'isValid'
-            ];
+                valueObscured: 'Boolean',
+                valueObscurator: 'Function',
+                messageTemplates: 'Object'
+            };
 
         it('should have the expected properties as expected types.', function () {
-            let validator = new Validator();
+            let validator = new ValidationOptions();
             Object.keys(expectedPropertyAndTypes).forEach(key => {
-                expect(validator.hasOwnProperty(key)).to.equal(true);
+                expect(validator.hasOwnProperty(peek(key))).to.equal(true);
                 expect(typeOf(validator[key])).to.equal(expectedPropertyAndTypes[key]);
-            });
-        });
-
-        it('should have the expected methods.', function () {
-            let validator = new Validator();
-            expectedMethodNames.forEach(function (methodName) {
-                expect(typeof validator[methodName]).to.equal('function');
-                expect(typeof Validator.prototype[methodName]).to.equal('function');
             });
         });
     });
 
-    describe('#addErrorByKey', function () {
+    describe('#getErrorMsgByKey', function () {
         const messageTemplates = {
                 EMPTY_NOT_ALLOWED: 'Empty values are not allowed.',
                 EXAMPLE_CASE: value => `Some case is not allowed for value ${value}`
             },
-            v = new Validator({messageTemplates});
-        it('should be able to add error messages by key (whether value of `key` on ' +
-            '`messageTemplates` is a function or a string, or whether `key` itself is a function.  ' +
-            'Should return itself', function () {
-            expect(v.addErrorByKey('EMPTY_NOT_ALLOWED')).to.equal(v);
-            expect(v.addErrorByKey('EXAMPLE_CASE')).to.equal(v);
-            expect(v.addErrorByKey(value => 'Inline error message callback')).to.equal(v);
+            v = new ValidationOptions({messageTemplates});
+        it('should return a `string` when key exists on options.messageTemplates', function () {
+            expect(isString(getErrorMsgByKey(v, value, 'EMPTY_NOT_ALLOWED'))).to.equal(true);
+            expect(v.getErrorMsgByKey('EXAMPLE_CASE')).to.equal(v);
+            expect(v.getErrorMsgByKey(value => 'Inline error message callback')).to.equal(v);
         });
         it('should added errors should be in `messages` property', function () {
             expect(v.messages.length).to.equal(3);
@@ -84,17 +62,8 @@ describe('sjl.validator.Validator', function () {
         });
         it('should do nothing to `messages` if `key` is not a function and `key` doesn\'t exist on ' +
             '`messageTemplates`', function () {
-            expect(v.addErrorByKey('SOME_OTHER_CASE')).to.equal(v);
+            expect(v.getErrorMsgByKey('SOME_OTHER_CASE')).to.equal(v);
             expect(v.messages.length).to.equal(3);
-        });
-    });
-
-    describe('#clearMessages', function () {
-        it('should clear messages property back to an empty array.  It should return itself', function () {
-            const v = new Validator();
-            v.messages.push('a', 'b', 'c');
-            expect(v.clearMessages()).to.equal(v);
-            expect(v.messages.length).to.equal(0);
         });
     });
 

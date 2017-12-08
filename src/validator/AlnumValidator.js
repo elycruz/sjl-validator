@@ -2,7 +2,7 @@
  * Created by Ely on 1/21/2015.
  */
 import {assignDeep} from 'fjl';
-import Validator, {ValidationResult, getErrorMsgByKey} from "./Validator";
+import Validator, {ValidationResult, getErrorMsgByKey} from "./ValidationOptions";
 
 export const
 

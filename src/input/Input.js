@@ -6,7 +6,7 @@
  */
 import {defineEnumProps$} from 'fjl-mutable';
 import {assign, compose, concat, isString, isUndefined} from 'fjl';
-import {ValidationResult} from "../validator/Validator";
+import {ValidationResult} from "../validator/ValidationOptions";
 
 export const
 

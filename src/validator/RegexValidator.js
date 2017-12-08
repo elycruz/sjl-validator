@@ -1,8 +1,8 @@
 /**
  * Created by Ely on 7/21/2014.
  */
-import Validator, {ValidationResult} from "../../src/validator/Validator";
-import {getErrorMsgByKey} from "./Validator";
+import Validator, {ValidationResult} from "./ValidationOptions";
+import {getErrorMsgByKey} from "./ValidationOptions";
 import {curry} from 'fjl';
 
 export const
