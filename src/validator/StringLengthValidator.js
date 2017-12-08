@@ -2,26 +2,30 @@
  * Created by Ely on 1/21/2015.
  */
 import Validator, {ValidationResult, getErrorMsgByKey, ValidationOptions} from "./Validator";
-import {typeOf, isString, apply, concat, assign} from 'fjl';
+import {typeOf, isString, apply, concat, assign, curry} from 'fjl';
 import {defineEnumProps$} from 'fjl-mutable';
 
 export const validate = (value, options) => {
-    const messages = [],
-        isOfType = isString(value),
-        valLength = isOfType ? value.length : 0,
-        isWithinRange = valLength >= options.min && valLength <= options.max;
-    if (!isOfType) {
-        messages.push(getErrorMsgByKey('NOT_OF_TYPE', value, options));
-    }
-    else if (!isWithinRange) {
-        messages.push(getErrorMsgByKey('NOT_WITHIN_RANGE', value, options));
-    }
-    return new ValidationResult({
-        result: isOfType && isWithinRange,
-        messages,
-        value
+        const messages = [],
+            isOfType = isString(value),
+            valLength = isOfType ? value.length : 0,
+            isWithinRange = valLength >= options.min && valLength <= options.max;
+        if (!isOfType) {
+            messages.push(getErrorMsgByKey('NOT_OF_TYPE', value, options));
+        }
+        else if (!isWithinRange) {
+            messages.push(getErrorMsgByKey('NOT_WITHIN_RANGE', value, options));
+        }
+        return new ValidationResult({
+            result: isOfType && isWithinRange,
+            messages,
+            value
+        });
+    },
+
+    stringLengthValidator = curry((options, value) => {
+        return validate (value, new StringLengthValidator(options));
     });
-};
 
 export class StringLengthOptions {
     constructor(options) {

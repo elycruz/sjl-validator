@@ -3,6 +3,7 @@
  */
 import Validator, {ValidationResult} from "../../src/validator/Validator";
 import {getErrorMsgByKey} from "./Validator";
+import {curry} from 'fjl';
 
 export const
 
@@ -19,7 +20,11 @@ export const
             messages,
             value
         });
-    };
+    },
+
+    regexValidator = curry((options, value) => {
+        return validate (value, new RegexValidator(options));
+    });
 
 export default class RegexValidator extends Validator {
     validate (value) {

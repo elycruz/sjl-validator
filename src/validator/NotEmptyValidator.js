@@ -2,7 +2,7 @@
  * Created by Ely on 7/21/2014.
  */
 import Validator, {ValidationResult, getErrorMsgByKey} from "./Validator";
-import {isEmpty} from 'fjl';
+import {isEmpty, curry} from 'fjl';
 
 export const
     validate = (value, options) => {
@@ -14,7 +14,9 @@ export const
         return new ValidationResult({result, messages, value});
     },
 
-    notEmptyValidator = (options, value) => validate(value, options)
+    notEmptyValidator = curry((options, value) => {
+        return validate (value, new NotEmptyValidator(options));
+    });
 ;
 
 export default class NotEmptyValidator extends Validator {
