@@ -30,37 +30,27 @@ export const
             message = messageTemplates[key];
         }
         return message;
-    });
+    }),
 
-export class ValidationResult {
-    constructor (options) {
-        defineEnumProps$([
-            [Boolean, 'result', false],
-            [Array, 'messages', []]
-        ], this);
-        this.value = undefined;
-        this.filteredValue = undefined;
-        assign(this, options);
-    }
-}
-
-export class ValidationOptions {
-    constructor (...options) {
-        const {defaultOptions} = this.constructor;
-        defineEnumProps$([
+    validationOptions = (...options) => {
+        const _options = defineEnumProps$([
             [Number, 'messagesMaxLength', 100],
             [Object, 'messageTemplates', {}],
             [Boolean, 'valueObscured', false],
             [Function, 'valueObscurator', defaultValueObscurator]
-        ], this);
-        if (options.length) {
-            assignDeep.apply(null, [this, defaultOptions].concat(options.filter(isset)));
-        }
+        ], {});
+        return options.length ?
+            apply(assignDeep, [_options].concat(options.filter(isset))) :
+            _options;
+    },
+
+    validationResults = options => {
+        const _options = defineEnumProps$([
+            [Boolean, 'result', false],
+            [Array, 'messages', []]
+        ], {});
+        _options.value = undefined;
+        return assign(_options, options);
     }
-}
+;
 
-ValidationOptions.defaultOptions = {
-    messageTemplates: {}
-};
-
-export default ValidationOptions;

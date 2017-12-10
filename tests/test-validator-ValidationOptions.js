@@ -3,9 +3,9 @@
  */
 import {typeOf, keys} from 'fjl';
 import {expect, assert} from 'chai';
-import {peek} from './utils';
+import {log, peek} from './utils';
 
-import ValidationOptions from '../src/validator/ValidationOptions';
+import {validationOptions} from '../src/validator/ValidationOptions';
 
 describe('sjl.validator.ValidationOptions', function () {
 
@@ -15,7 +15,9 @@ describe('sjl.validator.ValidationOptions', function () {
                     A: 'some message',
                     B: value => `some message with value in it.  Value: ${value}`
                 },
-                v = new ValidationOptions({messageTemplates});
+                v = validationOptions({messageTemplates});
+
+            log(v);
 
             // Ensure passed in allowed type is merged in
             keys(messageTemplates).forEach(key => {
@@ -24,7 +26,7 @@ describe('sjl.validator.ValidationOptions', function () {
 
             // Ensure not allowed type is blocked
             // messages must be of type `Array` so should throw error
-            assert.throws(() => new ValidationOptions({messageTemplates: 99}), Error);
+            assert.throws(() => validationOptions({messageTemplates: 99}), Error);
         });
 
         const expectedPropertyAndTypes = {
@@ -35,7 +37,7 @@ describe('sjl.validator.ValidationOptions', function () {
             };
 
         it('should have the expected properties as expected types.', function () {
-            let validator = new ValidationOptions();
+            let validator = validationOptions();
             Object.keys(expectedPropertyAndTypes).forEach(key => {
                 expect(validator.hasOwnProperty(peek(key))).to.equal(true);
                 expect(typeOf(validator[key])).to.equal(expectedPropertyAndTypes[key]);
@@ -48,7 +50,7 @@ describe('sjl.validator.ValidationOptions', function () {
                 EMPTY_NOT_ALLOWED: 'Empty values are not allowed.',
                 EXAMPLE_CASE: value => `Some case is not allowed for value ${value}`
             },
-            v = new ValidationOptions({messageTemplates});
+            v = validationOptions({messageTemplates});
         it('should return a `string` when key exists on options.messageTemplates', function () {
             expect(isString(getErrorMsgByKey(v, value, 'EMPTY_NOT_ALLOWED'))).to.equal(true);
             expect(v.getErrorMsgByKey('EXAMPLE_CASE')).to.equal(v);
@@ -64,18 +66,6 @@ describe('sjl.validator.ValidationOptions', function () {
             '`messageTemplates`', function () {
             expect(v.getErrorMsgByKey('SOME_OTHER_CASE')).to.equal(v);
             expect(v.messages.length).to.equal(3);
-        });
-    });
-
-    describe('#validate', function () {
-        it('should throw an error when called from base class', function () {
-            assert.throws(() => v.validate(), Error);
-        });
-    });
-
-    describe('#isValid', function () {
-        it('should throw an error when called from base class', function () {
-            assert.throws(() => v.isValid(), Error);
         });
     });
 
