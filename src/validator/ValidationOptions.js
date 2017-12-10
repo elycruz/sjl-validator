@@ -18,13 +18,13 @@ export const
         const {messageTemplates, valueObscured, valueObscurator} = options,
             _value = valueObscured ? valueObscurator(value) : value;
         if (isFunction(key)) {
-            message = call(key, _value, options);
+            message = call(key, options, _value);
         }
         else if (!messageTemplates[key]) {
-            return '';
+            return;
         }
         else if (isFunction(messageTemplates[key])) {
-            message = call(messageTemplates[key], _value, options);
+            message = call(messageTemplates[key], options, _value);
         }
         else {
             message = messageTemplates[key];
@@ -46,11 +46,11 @@ export const
 
     validationResults = options => {
         const _options = defineEnumProps$([
-            [Boolean, 'result', false],
-            [Array, 'messages', []]
+            [Boolean, 'result'],
+            [Array, 'messages']
         ], {});
         _options.value = undefined;
-        return assign(_options, options);
+        return options ? assign(_options, options) : _options;
     }
 ;
 

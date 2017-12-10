@@ -1,5 +1,5 @@
 {
-  "name": "sjl-validator",
+  "name": "fjl-input-filter",
   "version": "1.0.0",
   "description": "A set of common validators needed for both front and backend development with javascript (\r copied over from zend framework's Zend\\Validator and Zend\\Filter packages (with some modifications\r to adhere to javascript and a more functional coding style).",
   "main": "index.js",
@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/elycruz/sjl-validator#readme",
   "dependencies": {
-    "fjl": "^0.17.10",
+    "fjl": "^0.17.14",
     "fjl-error-throwing": "^0.7.5",
-    "fjl-mutable": "^0.15.0",
-    "validator": "^9.1.2"
+    "fjl-mutable": "^0.16.0",
+    "validator": "^9.2.0"
   },
   "devDependencies": {
     "babel-preset-env": "^1.6.1",

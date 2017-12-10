@@ -1,15 +1,15 @@
 /**
  * Created by elyde on 1/15/2016.
  */
-import {typeOf, keys} from 'fjl';
+import {typeOf, keys, isString, concat, isType} from 'fjl';
 import {expect, assert} from 'chai';
 import {log, peek} from './utils';
 
-import {validationOptions} from '../src/validator/ValidationOptions';
+import {validationOptions, validationResults, getErrorMsgByKey} from '../src/validator/ValidationOptions';
 
-describe('sjl.validator.ValidationOptions', function () {
+describe('#fjl.validator.ValidationOptions', function () {
 
-    describe('#Construction', function () {
+    describe('#validationOptions', function () {
         it('should merge incoming options to `self` on construction', function () {
             const messageTemplates = {
                     A: 'some message',
@@ -52,21 +52,74 @@ describe('sjl.validator.ValidationOptions', function () {
             },
             v = validationOptions({messageTemplates});
         it('should return a `string` when key exists on options.messageTemplates', function () {
-            expect(isString(getErrorMsgByKey(v, value, 'EMPTY_NOT_ALLOWED'))).to.equal(true);
-            expect(v.getErrorMsgByKey('EXAMPLE_CASE')).to.equal(v);
-            expect(v.getErrorMsgByKey(value => 'Inline error message callback')).to.equal(v);
+            expect(
+                concat([
+                    [getErrorMsgByKey(v, 'EMPTY_NOT_ALLOWED', 'someValue')],
+                    [getErrorMsgByKey(v, 'EXAMPLE_CASE', 'someValue')],
+                    [getErrorMsgByKey(v, _ => 'Inline error message callback', 'someValue')]
+                ])
+                .every(x => isString(x))
+            )
+                .to.equal(true);
         });
-        it('should added errors should be in `messages` property', function () {
-            expect(v.messages.length).to.equal(3);
-            expect(v.messages[0]).to.equal(messageTemplates.EMPTY_NOT_ALLOWED);
-            expect(v.messages[1]).to.equal(messageTemplates.EXAMPLE_CASE());
-            expect(v.messages[2]).to.equal('Inline error message callback');
+        it('should have returned expected error messages when key is valid (exists and is string or function)', function () {
+            const someValue = 'someValue',
+                messages = concat([
+                [getErrorMsgByKey(v, 'EMPTY_NOT_ALLOWED', 'someValue')],
+                [getErrorMsgByKey(v, 'EXAMPLE_CASE', 'someValue')],
+                [getErrorMsgByKey(v, _ => 'Inline error message callback', 'someValue')]
+            ]);
+            expect(messages.length).to.equal(3);
+            expect(messages[0]).to.equal(messageTemplates.EMPTY_NOT_ALLOWED);
+            expect(messages[1]).to.equal(messageTemplates.EXAMPLE_CASE(v, 'someValue'));
+            expect(messages[2]).to.equal('Inline error message callback');
         });
-        it('should do nothing to `messages` if `key` is not a function and `key` doesn\'t exist on ' +
+        it('should return `undefined` if `key` is not a function and `key` doesn\'t exist on ' +
             '`messageTemplates`', function () {
-            expect(v.getErrorMsgByKey('SOME_OTHER_CASE')).to.equal(v);
-            expect(v.messages.length).to.equal(3);
+            expect(getErrorMsgByKey(v, 'SOME_OTHER_CASE', 'someValue')).to.equal(undefined);
         });
+    });
+
+});
+
+describe ('#fjl.validator.ValidationResults', function () {
+
+    it ('should return an object with `messages`, and `result` properties', function () {
+        const vResults = validationResults();
+        expect(
+            ['messages', 'result', 'value']
+                .every(key => vResults.hasOwnProperty(key))
+        )
+            .to.equal(true);
+    });
+
+    it ('should have properties that obey their types', function () {
+        const
+            vResults = validationResults(),
+            cases = [
+                // key, Type, correctValue, incorrectValue
+                ['messages', Array, [], 99],
+                ['result', Boolean, false, 99]
+            ];
+
+        // Allow properties to be set with correct types
+        expect(
+            cases
+                .every(([name, _, correct]) => {
+                    vResults[name] = correct;
+                    return vResults[name] === correct;
+                })
+        )
+            .to.equal(true);
+
+        // Assert types are obeyed when values are of incorrect types
+        cases.map(([name, Type, _, incorrect]) => {
+            assert.throws(
+                ((_name, _incorrect) => () => vResults[_name] = _incorrect)(name, incorrect),
+                Error
+            );
+        });
+
     });
 
 });
