@@ -5,7 +5,7 @@ import {validationResult, getErrorMsgByKey, validationOptions} from "./Validatio
 import {typeOf, isString, apply, concat, assign, assignDeep, curry} from 'fjl';
 import {defineEnumProps$} from 'fjl-mutable';
 
-export const validate = (value, options) => {
+export const validate = (options, value) => {
         const messages = [],
             isOfType = isString(value),
             valLength = isOfType ? value.length : 0,
@@ -43,5 +43,5 @@ export const validate = (value, options) => {
     },
 
     stringLengthValidator = curry((options, value) => {
-        return validate (value, stringLengthOptions(options));
+        return validate (stringLengthOptions(options), value);
     });

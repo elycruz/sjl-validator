@@ -1,24 +1,18 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
-import RegexValidator from '../src/validator/DigitValidator';
-import Validator from '../src/validator/ValidationOptions';
+import {regexValidator, regexValidatorOptions} from '../src/validator/RegexValidator';
 import {expect, assert} from 'chai';
 import {typeOf} from 'fjl';
 
 describe('sjl.validator.RegexValidator`', function () {
 
-    it('should be a subclass of `Validator`.', function () {
-        expect((new RegexValidator()) instanceof Validator).to.equal(true);
-        expect((new RegexValidator()) instanceof RegexValidator).to.equal(true);
-    });
-
     function regexTest(keyValMap, expected) {
         Object.keys(keyValMap).map(key => {
             it('should return ' + expected + ' when testing "' + key + '" with "' + keyValMap[key] + '".', function () {
                 const value = keyValMap[key],
-                validator = new RegexValidator({pattern: new RegExp(key, 'i')});
-                expect(validator.isValid(value)).to.equal(expected);
+                    {result, messages} = regexValidator({pattern: new RegExp(key, 'i')}, value);
+                expect(result).to.equal(expected);
             });
         });
     }
