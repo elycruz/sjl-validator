@@ -1,35 +1,30 @@
 /**
  * Created by Ely on 7/21/2014.
  */
-import Validator, {ValidationResult, getErrorMsgByKey} from "./ValidationOptions";
+import {validationResult, validationOptions, getErrorMsgByKey} from "./ValidationOptions";
 import {isEmpty, curry} from 'fjl';
 
 export const
-    validate = (value, options) => {
+
+    validate = (options, value) => {
         const result = !isEmpty(value),
             // If test failed
             messages = !result ? [getErrorMsgByKey(
-                'EMPTY_NOT_ALLOWED', value, options
+                options, 'EMPTY_NOT_ALLOWED', value
             )] : [];
-        return new ValidationResult({result, messages, value});
+        return validationResult({result, messages, value});
     },
 
+    notEmptyOptions = options =>
+        validationOptions({
+            messageTemplates: {
+                EMPTY_NOT_ALLOWED: () =>
+                    'Empty values are not allowed.'
+            }
+        }, options),
+
     notEmptyValidator = curry((options, value) => {
-        return validate (value, new NotEmptyValidator(options));
-    });
+        return validate (notEmptyOptions(options), value);
+    })
+
 ;
-
-export default class NotEmptyValidator extends Validator {
-    validate (value) {
-        const result = validate(value, this);
-        this.messages = result.messages;
-        return result;
-    }
-}
-
-NotEmptyValidator.defaultOptions = {
-    messageTemplates: {
-        EMPTY_NOT_ALLOWED: () =>
-            'Empty values are not allowed.'
-    }
-};

@@ -16,4 +16,6 @@ export const
 
     genRanStr = (min = 0, max = 100) =>
         range$(min, max)
-            .reduce(str => str + genRanChar(min, max), '');
+            .reduce(str => str + genRanChar(min, max), '')
+
+;
