@@ -35,3 +35,5 @@ export const
     regexValidator = curry((options, value) => {
         return validate (regexValidatorOptions(options), value);
     });
+
+export default regexValidator;

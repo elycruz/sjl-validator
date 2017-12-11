@@ -25,6 +25,6 @@ export const
 
     notEmptyValidator = curry((options, value) => {
         return validate (notEmptyOptions(options), value);
-    })
+    });
 
-;
+export default notEmptyValidator;

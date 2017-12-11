@@ -45,3 +45,5 @@ export const validate = (options, value) => {
     stringLengthValidator = curry((options, value) => {
         return validate (stringLengthOptions(options), value);
     });
+
+export default stringLengthValidator;

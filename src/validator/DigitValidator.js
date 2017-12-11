@@ -1,15 +1,16 @@
 /**
  * Created by Ely on 1/21/2015.
  */
-import RegexValidator from "./RegexValidator";
+import {regexValidator} from "./RegexValidator";
+import {curry, assignDeep} from 'fjl';
 
-export default class DigitValidator extends RegexValidator {}
+export const digitValidator = curry((options, value) => regexValidator(assignDeep({
+        pattern: /^\d+$/,
+        messageTemplates: {
+            DOES_NOT_MATCH_PATTERN: x =>
+                `The value passed in contains non digital characters.  ` +
+                `Value received: "${x}".`
+        }
+    }, options), value));
 
-DigitValidator.defaultOptions = {
-    pattern: /^\d+$/,
-    messageTemplates: {
-        DOES_NOT_MATCH_PATTERN: value =>
-            `The value passed in contains non digital characters.  ` +
-            `Value received: "${value}".`
-    }
-};
+export default digitValidator;

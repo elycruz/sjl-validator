@@ -61,7 +61,6 @@ describe ('sjl.input.Input', function () {
             const rslt = validate(0, {});
             ['result', 'value', 'messsages'].forEach(key => expect(rslt.hasOwnProperty(key)));
         });
-
     });
 
     /*describe ('#isValid, #validate', function () {

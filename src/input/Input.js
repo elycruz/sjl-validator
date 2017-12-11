@@ -5,23 +5,23 @@
  *      functionality for javascript
  */
 import {defineEnumProps$} from 'fjl-mutable';
-import {assign, compose, concat, isString, isUndefined} from 'fjl';
-import {ValidationResult} from "../validator/ValidationOptions";
+import {assign, apply, compose, concat, isString, isUndefined} from 'fjl';
+import {validationResult} from "../validator/ValidationOptions";
 
 export const
 
     validate = (value, input) => {
         const
             {validators, filters, breakOnFailure} = input,
-            validationResult = validators && validators.length ?
+            vResult = validators && validators.length ?
                 runValidators(validators, value, breakOnFailure) : {result: false},
-            {result} = validationResult;
+            {result} = vResult;
 
-        validationResult.value = value;
+        vResult.value = value;
         if (result && filters && filters.length) {
-            validationResult.filteredValue = runFilters(filters, value);
+            vResult.filteredValue = runFilters(filters, value);
         }
-        return new ValidationResult(validationResult);
+        return validationResult(vResult);
     },
 
     runValidators = (validators, value, options) => {

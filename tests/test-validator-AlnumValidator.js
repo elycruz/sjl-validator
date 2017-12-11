@@ -1,19 +1,13 @@
 /**
  * Created by elyde on 1/15/2016.
  */
-import AlnumValidator from '../src/validator/AlnumValidator';
-import Validator from '../src/validator/ValidationOptions';
+import alnumValidator from '../src/validator/AlnumValidator';
 import {expect, assert} from 'chai';
 
 describe('sjl.validator.AlnumValidator', function () {
 
-    it ('should be a subclass of `Validator`.', function () {
-        let  validator = new AlnumValidator();
-        expect(validator instanceof Validator).to.equal(true);
-    });
-
     it ('should return `true` value is `alpha numeric` and `false` otherwise.', function () {
-        let  validator = new AlnumValidator(),
+        let  validator = alnumValidator({}),
             values = [
                 [true, 'helloworld'],
                 [true, 'testingtesting123testingtesting123'],
@@ -24,9 +18,10 @@ describe('sjl.validator.AlnumValidator', function () {
 
         // Validate values and expect value[0] to be return value of validation check
         values.forEach(value => {
-            expect(validator.isValid(value[1])).to.equal(value[0]);
+            const {result, messages} = validator(value[1]);
+            expect(result).to.equal(value[0]);
             if (!value[0]) {
-                expect(validator.messages.length).to.equal(1);
+                expect(messages.length).to.equal(1);
             }
         });
     });
