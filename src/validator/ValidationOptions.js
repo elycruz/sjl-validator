@@ -4,7 +4,7 @@
  */
 import {assignDeep, assign, isset,
     isType, typeOf, call, isFunction,
-    apply, repeat,
+    isString, apply, repeat,
     concat, curry} from 'fjl';
 
 import {defineEnumProps$} from 'fjl-mutable';
@@ -20,7 +20,7 @@ export const
         if (isFunction(key)) {
             message = call(key, options, _value);
         }
-        else if (!messageTemplates[key]) {
+        else if (!isString(key) || !messageTemplates[key]) {
             return;
         }
         else if (isFunction(messageTemplates[key])) {
@@ -44,7 +44,7 @@ export const
             _options;
     },
 
-    validationResults = options => {
+    validationResult = options => {
         const _options = defineEnumProps$([
             [Boolean, 'result'],
             [Array, 'messages']

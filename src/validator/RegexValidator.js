@@ -26,14 +26,6 @@ export const
         return validate (value, new RegexValidator(options));
     });
 
-export default class RegexValidator extends Validator {
-    validate (value) {
-        const result = validate(value, this.options);
-        this.clearMessages().messages = result.messages;
-        return result;
-    }
-}
-
 RegexValidator.defaultOptions = {
     pattern: /./,
     messageTemplates: {

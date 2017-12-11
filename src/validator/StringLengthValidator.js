@@ -1,8 +1,8 @@
 /**
  * Created by Ely on 1/21/2015.
  */
-import Validator, {ValidationResult, getErrorMsgByKey, ValidationOptions} from "./ValidationOptions";
-import {typeOf, isString, apply, concat, assign, curry} from 'fjl';
+import {validationResult, getErrorMsgByKey, validationOptions} from "./ValidationOptions";
+import {typeOf, isString, apply, concat, assign, assignDeep, curry} from 'fjl';
 import {defineEnumProps$} from 'fjl-mutable';
 
 export const validate = (value, options) => {
@@ -16,7 +16,7 @@ export const validate = (value, options) => {
         else if (!isWithinRange) {
             messages.push(getErrorMsgByKey('NOT_WITHIN_RANGE', value, options));
         }
-        return new ValidationResult({
+        return validationResult({
             result: isOfType && isWithinRange,
             messages,
             value
@@ -39,9 +39,9 @@ export const validate = (value, options) => {
                 `Value received: "` + value + `".`
         };
 
-        return validationOptions(assingDeep(_options, options));
+        return validationOptions(options ? assignDeep(_options, options) : _options);
     },
 
     stringLengthValidator = curry((options, value) => {
-        return validate (value, new StringLengthOptions(options));
+        return validate (value, stringLengthOptions(options));
     });

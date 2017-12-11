@@ -5,7 +5,7 @@ import {typeOf, keys, isString, concat, isType} from 'fjl';
 import {expect, assert} from 'chai';
 import {log, peek} from './utils';
 
-import {validationOptions, validationResults, getErrorMsgByKey} from '../src/validator/ValidationOptions';
+import {validationOptions, validationResult, getErrorMsgByKey} from '../src/validator/ValidationOptions';
 
 describe('#fjl.validator.ValidationOptions', function () {
 
@@ -85,7 +85,7 @@ describe('#fjl.validator.ValidationOptions', function () {
 describe ('#fjl.validator.ValidationResults', function () {
 
     it ('should return an object with `messages`, and `result` properties', function () {
-        const vResults = validationResults();
+        const vResults = validationResult();
         expect(
             ['messages', 'result', 'value']
                 .every(key => vResults.hasOwnProperty(key))
@@ -95,7 +95,7 @@ describe ('#fjl.validator.ValidationResults', function () {
 
     it ('should have properties that obey their types', function () {
         const
-            vResults = validationResults(),
+            vResults = validationResult(),
             cases = [
                 // key, Type, correctValue, incorrectValue
                 ['messages', Array, [], 99],
